@@ -461,7 +461,7 @@
           const grid = document.getElementById('grid');
           if (!grid) return;
           
-          // Обработка касаний
+          // Обработка касаний - исправленная версия
           grid.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (this.gameState !== 'playing') return;
@@ -485,7 +485,7 @@
             this.lastTouchPos = { x: touch.clientX, y: touch.clientY };
             
             const cell = this.getCellFromPoint(touch.clientX, touch.clientY);
-            if (cell && !this.selected.some(sel => sel.x === cell.x && sel.y === cell.y)) {
+            if (cell) {
               this.handleCellHover(cell.x, cell.y);
             }
             
@@ -494,6 +494,14 @@
           }, { passive: false });
           
           grid.addEventListener('touchend', (e) => {
+            if (this.isDragging) {
+              this.handleEnd();
+              this.isDragging = false;
+              this.lastTouchPos = null;
+            }
+          });
+          
+          grid.addEventListener('touchcancel', (e) => {
             if (this.isDragging) {
               this.handleEnd();
               this.isDragging = false;
@@ -517,12 +525,19 @@
             if (!this.isDragging) return;
             
             const cell = this.getCellFromPoint(e.clientX, e.clientY);
-            if (cell && !this.selected.some(sel => sel.x === cell.x && sel.y === cell.y)) {
+            if (cell) {
               this.handleCellHover(cell.x, cell.y);
             }
           });
           
           grid.addEventListener('mouseup', () => {
+            if (this.isDragging) {
+              this.handleEnd();
+              this.isDragging = false;
+            }
+          });
+          
+          grid.addEventListener('mouseleave', () => {
             if (this.isDragging) {
               this.handleEnd();
               this.isDragging = false;
@@ -710,11 +725,20 @@
           if (!this.isDragging || this.activeBonus) return;
           
           try {
+            // Проверяем, не выбрана ли уже эта ячейка
+            if (this.selected.some(sel => sel.x === x && sel.y === y)) {
+              return;
+            }
+            
             const last = this.selected[this.selected.length - 1];
-            if (!this.isAdjacent(last, {x, y})) return;
+            if (!last || !this.isAdjacent(last, {x, y})) {
+              return;
+            }
             
             const newNum = this.grid[x][y].number;
             const prevNum = this.chainNumbers[this.chainNumbers.length - 1];
+            
+            // Проверяем возможность соединения (одинаковые числа или удвоение)
             if (newNum === prevNum || newNum === prevNum * 2 || prevNum === newNum * 2) {
               this.selected.push({x, y});
               this.chainNumbers.push(newNum);
@@ -746,7 +770,9 @@
         }
         
         isAdjacent(a, b) {
-          return Math.abs(a.x - b.x) <= 1 && Math.abs(a.y - b.y) <= 1;
+          const dx = Math.abs(a.x - b.x);
+          const dy = Math.abs(a.y - b.y);
+          return (dx <= 1 && dy <= 1) && !(dx === 0 && dy === 0);
         }
         
         mergeChain() {
