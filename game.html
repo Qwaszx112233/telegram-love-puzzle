@@ -756,7 +756,7 @@
     <div class="about-content">
       <p class="about-text">Love Number Puzzle - це гра про кохання та числа! 💕</p>
       <p class="about-text">Об'єднуйте числа та отримуйте любовні послання для вашого коханого!</p>
-      <p class="about-text">🌟 Особливості:<br>• 10 рівнів складності<br>• Любовні фрази<br>• Бонуси та анімації</p>
+      <p class="about-text">🌟 Особливості:<br>• 30 рівнів складності<br>• Любовні фрази<br>• Бонуси та анімації</p>
       <p class="about-text">🎮 Керування:<br>• Торкайтеся чисел<br>• Створюйте ланцюжки<br>• Використовуйте бонуси</p>
     </div>
     <div class="menu-buttons" style="margin-top: 20px;">
@@ -919,7 +919,8 @@
         
         console.log("✅ Игра инициализирована, сетка создана");
       }
-      
+
+      // ИСПРАВЛЕННАЯ ЛОГИКА ОБЪЕДИНЕНИЯ ЦЕПОЧЕК
       render() {
         const gridDiv = document.getElementById('grid');
         if (!gridDiv) {
@@ -945,13 +946,27 @@
               cell.classList.add('merged');
             }
             
-            // Обработчики событий
+            // Обработчики событий для ПК
             cell.addEventListener('mousedown', (e) => this.handleCellStart(e, x, y));
+            cell.addEventListener('mouseenter', (e) => this.handleCellHover(e, x, y));
+            
+            // Обработчики для мобильных
             cell.addEventListener('touchstart', (e) => {
               e.preventDefault();
               this.handleCellStart(e, x, y);
             }, { passive: false });
             
+            cell.addEventListener('touchmove', (e) => {
+              e.preventDefault();
+              const touch = e.touches[0];
+              const element = document.elementFromPoint(touch.clientX, touch.clientY);
+              if (element && element.classList.contains('cell')) {
+                const x = parseInt(element.dataset.x);
+                const y = parseInt(element.dataset.y);
+                this.handleCellHover(e, x, y);
+              }
+            }, { passive: false });
+
             const inner = document.createElement('div');
             inner.className = 'cell-inner';
             inner.textContent = this.grid[x][y].number;
@@ -960,19 +975,232 @@
             gridDiv.appendChild(cell);
           }
         }
+
+        // Глобальные обработчики
+        this.setupGlobalHandlers();
         
         this.updateXPBar();
         console.log("✅ Сетка отрисована");
       }
-      
+
+      setupGlobalHandlers() {
+        // Удаляем старые обработчики
+        document.removeEventListener('mouseup', this.handleEndBound);
+        document.removeEventListener('touchend', this.handleEndBound);
+        
+        // Создаем привязанные методы
+        this.handleEndBound = this.handleEnd.bind(this);
+        this.handleMoveBound = this.handleMove.bind(this);
+        
+        // Добавляем новые обработчики
+        document.addEventListener('mouseup', this.handleEndBound);
+        document.addEventListener('touchend', this.handleEndBound);
+        document.addEventListener('mousemove', this.handleMoveBound);
+      }
+
       handleCellStart(e, x, y) {
         e.preventDefault();
         if (this.gameState !== 'playing') return;
+        
+        console.log("🎯 Начало выбора:", x, y, "число:", this.grid[x][y].number);
         
         this.selected = [{x, y}];
         this.chainNumbers = [this.grid[x][y].number];
         this.isDragging = true;
         this.render();
+      }
+
+      handleCellHover(e, x, y) {
+        if (!this.isDragging || this.activeBonus) return;
+        
+        // Если уже выбрана, игнорируем
+        if (this.selected.some(sel => sel.x === x && sel.y === y)) return;
+        
+        const last = this.selected[this.selected.length - 1];
+        
+        // Проверяем соседство
+        if (!this.isAdjacent(last, {x, y})) {
+          console.log("❌ Не соседняя ячейка");
+          return;
+        }
+        
+        const newNum = this.grid[x][y].number;
+        const prevNum = this.chainNumbers[this.chainNumbers.length - 1];
+        
+        // Проверяем возможность объединения
+        if (newNum === prevNum || newNum === prevNum * 2 || prevNum === newNum * 2) {
+          console.log("✅ Можно объединить:", prevNum, "и", newNum);
+          this.selected.push({x, y});
+          this.chainNumbers.push(newNum);
+          this.render();
+        } else {
+          console.log("❌ Нельзя объединить:", prevNum, "и", newNum);
+        }
+      }
+
+      handleMove(e) {
+        if (!this.isDragging || this.activeBonus) return;
+        
+        e.preventDefault();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        
+        if (!clientX || !clientY) return;
+        
+        const element = document.elementFromPoint(clientX, clientY);
+        if (element && element.classList.contains('cell')) {
+          const x = parseInt(element.dataset.x);
+          const y = parseInt(element.dataset.y);
+          this.handleCellHover(e, x, y);
+        }
+      }
+
+      handleEnd() {
+        if (!this.isDragging) return;
+        
+        console.log("🏁 Завершение выбора, выбрано ячеек:", this.selected.length);
+        
+        if (this.selected.length >= 2) {
+          this.mergeChain();
+        } else {
+          console.log("❌ Слишком короткая цепочка");
+          this.selected = [];
+          this.chainNumbers = [];
+          this.render();
+        }
+        
+        this.isDragging = false;
+      }
+
+      isAdjacent(a, b) {
+        const dx = Math.abs(a.x - b.x);
+        const dy = Math.abs(a.y - b.y);
+        return (dx <= 1 && dy <= 1) && !(dx === 0 && dy === 0);
+      }
+
+      mergeChain() {
+        console.log("🔄 Объединение цепочки:", this.chainNumbers);
+        
+        const last = this.selected[this.selected.length - 1];
+        const newValue = this.chainNumbers.reduce((sum, val) => sum + val, 0);
+        
+        console.log("Новое значение:", newValue);
+        
+        if (!this.isValidResultNumber(newValue)) {
+          console.log("❌ Неверное результирующее число");
+          this.showLoveMessage("Спробуй іншу комбінацію! 💕");
+          this.selected = [];
+          this.chainNumbers = [];
+          this.render();
+          return;
+        }
+        
+        // Обновляем последнюю ячейку
+        this.grid[last.x][last.y].number = newValue;
+        this.grid[last.x][last.y].merged = true;
+        
+        // Очищаем остальные ячейки в цепочке
+        for (let i = 0; i < this.selected.length - 1; i++) {
+          const {x, y} = this.selected[i];
+          this.grid[x][y].number = this.getRandomInitialNumber();
+          this.grid[x][y].merged = false;
+        }
+        
+        // Начисляем опыт
+        const xpEarned = this.calculateXP(this.selected.length);
+        this.xp += xpEarned;
+        
+        console.log("💫 Получено опыта:", xpEarned);
+        
+        // Показываем сообщение
+        this.showRandomLoveMessage(this.selected.length);
+        
+        if (newValue > this.maxNumber) {
+          this.maxNumber = newValue;
+        }
+        
+        // Сбрасываем выделение через время
+        setTimeout(() => {
+          for (let x = 0; x < this.GRID_W; x++) {
+            for (let y = 0; y < this.GRID_H; y++) {
+              this.grid[x][y].merged = false;
+            }
+          }
+          
+          this.selected = [];
+          this.chainNumbers = [];
+          this.render();
+          this.checkWin();
+        }, 500);
+        
+        this.updateInfo();
+        console.log("✅ Цепочка объединена!");
+      }
+
+      isValidResultNumber(num) {
+        const level = this.levels[this.currentLevel];
+        return num >= 2 && num <= level.target * 2;
+      }
+
+      getRandomInitialNumber() {
+        const level = this.levels[this.currentLevel];
+        return level.numbers[Math.floor(Math.random() * level.numbers.length)];
+      }
+
+      calculateXP(chainLen) {
+        if (chainLen === 2) return 1;
+        if (chainLen === 3) return 3;
+        if (chainLen === 4) return 6;
+        if (chainLen === 5) return 10;
+        if (chainLen >= 6) return 15;
+        return 0;
+      }
+
+      showRandomLoveMessage(chainLength) {
+        this.messageCount++;
+        document.getElementById('messageCount').textContent = this.messageCount;
+        
+        let message;
+        if (chainLength >= 6) {
+          message = "Вау! Ти геній кохання! 💖 Наша любов така ж сильна!";
+        } else if (chainLength >= 4) {
+          message = "Чудово! Наша любов росте як твої навички! 🌟";
+        } else {
+          const randomIndex = Math.floor(Math.random() * this.loveMessages.length);
+          message = this.loveMessages[randomIndex];
+        }
+        
+        this.showLoveMessage(message);
+        this.createHeartsAnimation();
+      }
+
+      createHeartsAnimation() {
+        const heartsContainer = document.getElementById('hearts');
+        heartsContainer.innerHTML = '';
+        const heartCount = 3;
+        
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement('div');
+          heart.className = 'heart';
+          heart.innerHTML = '❤️';
+          heart.style.left = Math.random() * 80 + 10 + '%';
+          heart.style.animationDelay = Math.random() * 0.5 + 's';
+          heartsContainer.appendChild(heart);
+        }
+      }
+
+      checkWin() {
+        const level = this.levels[this.currentLevel];
+        
+        for (let x = 0; x < this.GRID_W; x++) {
+          for (let y = 0; y < this.GRID_H; y++) {
+            if (this.grid[x][y].number === level.target) {
+              this.gameState = 'win';
+              this.showLoveMessage(`Вітаю! Ти досягла цілі ${level.target}! 🎉❤️`);
+              return;
+            }
+          }
+        }
       }
       
       updateInfo() {
