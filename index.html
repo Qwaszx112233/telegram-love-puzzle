@@ -4,10 +4,553 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>💖 Love Number Puzzle - Для моєї коханої 💖</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
   <style>
-    /* Дополнительные романтические стили */
+    :root {
+      --primary-color: #e91e63;
+      --secondary-color: #ff4081;
+      --accent-color: #f8bbd9;
+      --bg-color: #fff5f7;
+      --text-color: #880e4f;
+      --white: #ffffff;
+      --shadow: 0 4px 15px rgba(233, 30, 99, 0.15);
+      --cell-color: #ffeef2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .screen {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+    }
+
+    .screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+    }
+
+    /* Main Menu Styles */
+    .main-menu {
+      text-align: center;
+      padding: 20px 15px;
+    }
+
+    .game-title {
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: clamp(20px, 6vh, 30px);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .romantic-subtitle {
+      font-size: 1.5rem;
+      color: #e91e63;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .menu-btn {
+      padding: clamp(16px, 5vh, 20px) 25px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--white);
+      border: none;
+      border-radius: 20px;
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.95);
+    }
+
+    .menu-btn.secondary {
+      background: var(--white);
+      color: var(--primary-color);
+      border: 3px solid var(--accent-color);
+    }
+
+    .menu-features {
+      margin-top: clamp(20px, 5vh, 30px);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      max-width: 320px;
+    }
+
+    .feature-item {
+      background: var(--white);
+      padding: 15px 10px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    /* Game Screen Styles */
+    .game-screen {
+      justify-content: flex-start;
+      padding: 10px 10px 5px;
+    }
+
+    .game-header {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .header-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .header {
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-weight: bold;
+      color: var(--primary-color);
+      text-align: center;
+      flex: 1;
+    }
+
+    .home-btn {
+      padding: 10px 15px;
+      background: var(--white);
+      color: var(--primary-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 10px;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .home-btn:active {
+      transform: scale(0.95);
+    }
+
+    .love-message {
+      background: var(--white);
+      padding: 10px 12px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--accent-color);
+      width: 100%;
+    }
+
+    .message-text {
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-weight: 600;
+      color: var(--text-color);
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin: 8px 0;
+      gap: 8px;
+    }
+
+    .stat-item {
+      text-align: center;
+      background: var(--white);
+      padding: 8px 10px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      font-weight: 600;
+      color: var(--text-color);
+      flex: 1;
+    }
+
+    .xp-bar {
+      width: 100%;
+      height: 16px;
+      background: #ffeef2;
+      border-radius: 8px;
+      margin: 8px 0;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid var(--accent-color);
+    }
+
+    .xp-bar-inner {
+      height: 100%;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      border-radius: 6px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .xp-bar-text {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .game-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+      gap: 10px;
+    }
+
+    .bonuses {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .bonus-btn {
+      padding: 10px 12px;
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      border-radius: 8px;
+      border: none;
+      background: var(--cell-color);
+      color: var(--text-color);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 80px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 2px solid var(--accent-color);
+    }
+
+    .bonus-btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .bonus-btn:disabled {
+      background: #f8f8f8;
+      color: #ccc;
+      cursor: not-allowed;
+      border-color: #f8f8f8;
+    }
+
+    .bonus-btn.active {
+      background: var(--primary-color);
+      color: var(--white);
+    }
+
+    .bonus-cost {
+      color: var(--primary-color);
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .level-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin: 5px 0;
+      max-height: 70px;
+      overflow-y: auto;
+    }
+
+    .level-btn {
+      padding: 8px 0;
+      width: clamp(35px, 8vw, 40px);
+      border-radius: 8px;
+      border: 2px solid var(--accent-color);
+      background: var(--cell-color);
+      color: var(--text-color);
+      font-weight: bold;
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .level-btn.selected, .level-btn:active {
+      background: var(--primary-color);
+      color: var(--white);
+      border-color: var(--primary-color);
+    }
+
+    .grid-container {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 55vh;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 4px;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 8px;
+      width: 100%;
+      max-width: 500px;
+      height: 100%;
+      max-height: 100%;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .cell {
+      position: relative;
+      background: var(--cell-color);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(233, 30, 99, 0.2);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid transparent;
+      min-height: 45px;
+    }
+
+    .cell::before {
+      content: '';
+      display: block;
+      padding-top: 100%;
+    }
+
+    .cell-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      font-weight: bold;
+      color: var(--text-color);
+      user-select: none;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    .cell.selected {
+      transform: scale(0.92);
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 15px rgba(255, 64, 129, 0.6);
+      z-index: 10;
+    }
+
+    .cell.merged .cell-inner {
+      background: var(--primary-color);
+      color: var(--white);
+      border-radius: 6px;
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1.2); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .cell.valid-next {
+      box-shadow: 0 0 0 3px var(--secondary-color);
+    }
+
+    /* Кольори для різних чисел */
+    .cell[data-number="2"] { background: #ffb6c1; }
+    .cell[data-number="4"] { background: #ffd700; }
+    .cell[data-number="8"] { background: #98fb98; }
+    .cell[data-number="16"] { background: #87ceeb; }
+    .cell[data-number="32"] { background: #da70d6; }
+    .cell[data-number="64"] { background: #ffa07a; }
+    .cell[data-number="128"] { background: #f0e68c; }
+    .cell[data-number="256"] { background: #dda0dd; }
+    .cell[data-number="512"] { background: #b0e0e6; }
+    .cell[data-number="1024"] { background: #ffb347; }
+    .cell[data-number="2048"] { background: #c9a0dc; }
+    .cell[data-number="4096"] { background: #77dd77; }
+    .cell[data-number="8192"] { background: #ff6961; }
+    .cell[data-number="16384"] { background: #aec6cf; }
+    .cell[data-number="32768"] { background: #f49ac2; }
+    .cell[data-number="65536"] { background: #cb99c9; }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 10px 0 5px;
+      width: 100%;
+      padding: 12px 8px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--accent-color);
+      min-height: 70px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 15px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
+      flex: 1;
+      min-width: 90px;
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn.back-btn {
+      background: var(--white);
+      color: var(--primary-color);
+      border: 2px solid var(--accent-color);
+    }
+
+    .swipe-hint {
+      text-align: center;
+      color: var(--primary-color);
+      font-weight: bold;
+      margin: 10px 0;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 8px;
+      border-radius: 10px;
+    }
+
+    .hearts {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 1rem;
+      opacity: 0;
+      animation: float 2s ease-in-out forwards;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-30px) rotate(360deg); opacity: 0; }
+    }
+
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.2;
+      animation: floatAround 15s linear infinite;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(100px, 100px) rotate(90deg); }
+      50% { transform: translate(50px, 200px) rotate(180deg); }
+      75% { transform: translate(-50px, 150px) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    /* Romantic Particles */
     .romantic-particle {
       position: fixed;
       pointer-events: none;
@@ -20,23 +563,7 @@
       0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
       100% { transform: translateY(-100px) rotate(360deg) scale(0.5); opacity: 0; }
     }
-    
-    .romantic-subtitle {
-      font-size: 1.2rem;
-      color: #e91e63;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-weight: bold;
-    }
-    
-    .swipe-hint {
-      text-align: center;
-      color: #e91e63;
-      font-weight: bold;
-      margin: 10px 0;
-      font-size: 0.9rem;
-    }
-    
+
     .touch-glow {
       position: fixed;
       width: 80px;
@@ -48,35 +575,128 @@
       animation: touchPulse 0.6s ease-out forwards;
       transform: translate(-50%, -50%);
     }
-    
+
     @keyframes touchPulse {
       0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
       100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
     }
-    
-    /* Улучшенные стили для романтики */
-    body {
-      background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%) !important;
-      font-family: 'Arial', sans-serif;
+
+    /* Victory Screen */
+    .victory-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
     }
-    
-    .game-title {
-      background: linear-gradient(45deg, #e91e63, #ff4081);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+    .victory-overlay.hidden {
+      display: none;
     }
-    
-    .cell {
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.2);
+
+    .victory-content {
+      background: var(--white);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(233, 30, 99, 0.3);
+      text-align: center;
+      max-width: 90%;
     }
-    
-    .cell.selected {
-      transform: scale(0.9);
-      box-shadow: 0 0 15px rgba(255, 64, 129, 0.6);
-      z-index: 10;
+
+    .victory-title {
+      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .victory-message {
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      color: var(--text-color);
+      margin-bottom: 30px;
+    }
+
+    /* Settings Screen */
+    .settings-screen {
+      text-align: center;
+      padding: 20px 15px;
+    }
+
+    .settings-title {
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      color: var(--primary-color);
+      margin-bottom: clamp(20px, 5vh, 30px);
+    }
+
+    .settings-options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .setting-item {
+      background: var(--white);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .setting-label {
+      font-weight: bold;
+      color: var(--text-color);
+      margin-bottom: 8px;
+      display: block;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+    }
+
+    .setting-control {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid var(--accent-color);
+      border-radius: 10px;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      background: var(--white);
+    }
+
+    /* Mobile-specific improvements */
+    @media (max-width: 480px) {
+      .grid {
+        gap: 3px;
+        padding: 6px;
+      }
+      
+      .cell {
+        min-height: 40px;
+      }
+      
+      .cell-inner {
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
+      }
+    }
+
+    /* Very small screens */
+    @media (max-width: 350px) {
+      .grid {
+        gap: 2px;
+        padding: 4px;
+      }
+      
+      .cell {
+        min-height: 35px;
+      }
+      
+      .bonus-btn {
+        min-width: 70px;
+        padding: 8px 10px;
+      }
     }
   </style>
 </head>
@@ -230,7 +850,6 @@
   </div>
 
   <script>
-    // Упрощенный и исправленный код игры
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, initializing game...');
       
@@ -324,6 +943,7 @@
           this.messageCount = 0;
           
           this.lastTouchPos = null;
+          this.currentTouchId = null;
           
           this.createEnhancedFloatingHearts();
           this.initializeEventListeners();
@@ -461,12 +1081,17 @@
           const grid = document.getElementById('grid');
           if (!grid) return;
           
-          // Обработка касаний
+          // Обработка начала касания
           grid.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (this.gameState !== 'playing') return;
             
+            // Используем только первое касание
+            if (this.currentTouchId !== null) return;
+            
             const touch = e.touches[0];
+            this.currentTouchId = touch.identifier;
+            
             const cell = this.getCellFromPoint(touch.clientX, touch.clientY);
             
             if (cell) {
@@ -477,11 +1102,22 @@
             }
           }, { passive: false });
           
+          // Обработка движения пальца
           grid.addEventListener('touchmove', (e) => {
             e.preventDefault();
-            if (!this.isDragging) return;
+            if (!this.isDragging || this.currentTouchId === null) return;
             
-            const touch = e.touches[0];
+            // Находим наше касание по идентификатору
+            let touch = null;
+            for (let i = 0; i < e.touches.length; i++) {
+              if (e.touches[i].identifier === this.currentTouchId) {
+                touch = e.touches[i];
+                break;
+              }
+            }
+            
+            if (!touch) return;
+            
             this.lastTouchPos = { x: touch.clientX, y: touch.clientY };
             
             const cell = this.getCellFromPoint(touch.clientX, touch.clientY);
@@ -493,39 +1129,34 @@
             
           }, { passive: false });
           
+          // Обработка окончания касания
           grid.addEventListener('touchend', (e) => {
-            if (this.isDragging) {
+            if (this.isDragging && this.currentTouchId !== null) {
+              // Проверяем, было ли это наше касание
+              let ourTouchEnded = false;
+              for (let i = 0; i < e.changedTouches.length; i++) {
+                if (e.changedTouches[i].identifier === this.currentTouchId) {
+                  ourTouchEnded = true;
+                  break;
+                }
+              }
+              
+              if (ourTouchEnded) {
+                this.handleEnd();
+                this.isDragging = false;
+                this.lastTouchPos = null;
+                this.currentTouchId = null;
+              }
+            }
+          });
+          
+          // Отмена касания
+          grid.addEventListener('touchcancel', (e) => {
+            if (this.isDragging && this.currentTouchId !== null) {
               this.handleEnd();
               this.isDragging = false;
               this.lastTouchPos = null;
-            }
-          });
-          
-          // Обработка мыши для тестирования
-          grid.addEventListener('mousedown', (e) => {
-            if (this.gameState !== 'playing') return;
-            
-            const cell = this.getCellFromPoint(e.clientX, e.clientY);
-            if (cell) {
-              this.isDragging = true;
-              this.handleCellStart(e, cell.x, cell.y);
-              this.createTouchGlow(e.clientX, e.clientY);
-            }
-          });
-          
-          grid.addEventListener('mousemove', (e) => {
-            if (!this.isDragging) return;
-            
-            const cell = this.getCellFromPoint(e.clientX, e.clientY);
-            if (cell && !this.selected.some(sel => sel.x === cell.x && sel.y === cell.y)) {
-              this.handleCellHover(cell.x, cell.y);
-            }
-          });
-          
-          grid.addEventListener('mouseup', () => {
-            if (this.isDragging) {
-              this.handleEnd();
-              this.isDragging = false;
+              this.currentTouchId = null;
             }
           });
         }
@@ -535,6 +1166,13 @@
           if (!grid) return null;
           
           const rect = grid.getBoundingClientRect();
+          
+          // Проверяем, находится ли точка внутри сетки
+          if (clientX < rect.left || clientX > rect.right || 
+              clientY < rect.top || clientY > rect.bottom) {
+            return null;
+          }
+          
           const x = clientX - rect.left;
           const y = clientY - rect.top;
           
@@ -616,6 +1254,7 @@
             this.activeBonus = null;
             this.gameState = 'playing';
             this.messageCount = 0;
+            this.currentTouchId = null;
             
             // Инициализация сетки
             for (let x = 0; x < this.GRID_W; x++) {
@@ -696,11 +1335,10 @@
             this.chainNumbers = [this.grid[x][y].number];
             this.render();
             
-            this.createRomanticParticle(
-              e.clientX || (e.touches && e.touches[0].clientX), 
-              e.clientY || (e.touches && e.touches[0].clientY), 
-              '💕'
-            );
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            this.createRomanticParticle(clientX, clientY, '💕');
           } catch (error) {
             console.error("Ошибка обработки начала выбора:", error);
           }
@@ -715,6 +1353,8 @@
             
             const newNum = this.grid[x][y].number;
             const prevNum = this.chainNumbers[this.chainNumbers.length - 1];
+            
+            // Проверяем, можно ли объединить числа
             if (newNum === prevNum || newNum === prevNum * 2 || prevNum === newNum * 2) {
               this.selected.push({x, y});
               this.chainNumbers.push(newNum);
@@ -762,15 +1402,18 @@
               return;
             }
             
+            // Обновляем последнюю ячейку новым значением
             this.grid[last.x][last.y].number = newValue;
             this.grid[last.x][last.y].merged = true;
             
+            // Сбрасываем остальные ячейки в цепочке
             for (let i = 0; i < this.selected.length - 1; i++) {
               const {x, y} = this.selected[i];
               this.grid[x][y].number = this.getRandomInitialNumber();
               this.grid[x][y].merged = false;
             }
             
+            // Начисляем опыт
             const xpEarned = this.calculateXP(this.selected.length);
             this.xp += xpEarned;
             
@@ -780,6 +1423,7 @@
               this.maxNumber = newValue;
             }
             
+            // Сбрасываем анимацию слияния и проверяем победу
             setTimeout(() => {
               for (let x = 0; x < this.GRID_W; x++) {
                 for (let y = 0; y < this.GRID_H; y++) {
@@ -809,6 +1453,7 @@
             let message;
             if (chainLength >= 6) {
               message = "Вау! Ти геній кохання! 💖 Наша любов така ж сильна!";
+              // Специальные эффекты для длинных цепочек
               for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                   this.createRomanticParticle(
@@ -867,8 +1512,8 @@
         formatNumber(num) {
           if (num >= 1_000_000_000) return (num/1_000_000_000).toFixed(num % 1_000_000_000 === 0 ? 0 : 1) + "B";
           if (num >= 1_000_000) return (num/1_000_000).toFixed(num % 1_000_000 === 0 ? 0 : 1) + "M";
-          if (num >= 10_000) return (num/1_000).toFixed(0) + "К";
-          if (num >= 1_000) return (num/1_000).toFixed(num % 1_000 === 0 ? 0 : 1) + "К";
+          if (num >= 10_000) return (num/1_000).toFixed(0) + "K";
+          if (num >= 1_000) return (num/1_000).toFixed(num % 1_000 === 0 ? 0 : 1) + "K";
           return num.toString();
         }
         
@@ -963,6 +1608,7 @@
               }
             }
             
+            // Тасование Фишера-Йейтса
             for (let i = all.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
               [all[i], all[j]] = [all[j], all[i]];
