@@ -1,6 +1,6 @@
 class LoveNumberPuzzle {
     constructor() {
-        // Инициализация Telegram Web App с обработкой ошибок
+        // Инициализация Telegram Web App
         try {
             this.tg = window.Telegram?.WebApp;
             if (this.tg) {
@@ -81,11 +81,7 @@ class LoveNumberPuzzle {
             this.tg.enableClosingConfirmation();
             this.applyTelegramTheme();
             
-            // Обработчик изменения темы
             this.tg.onEvent('themeChanged', this.applyTelegramTheme.bind(this));
-            
-            // Обработчик изменения размера viewport
-            this.tg.onEvent('viewportChanged', this.handleViewportChange.bind(this));
             
             this.isTelegram = true;
             console.log("Telegram Web App успешно инициализирован");
@@ -99,7 +95,6 @@ class LoveNumberPuzzle {
         try {
             const themeParams = this.tg.themeParams;
             
-            // Применяем тему Telegram к CSS переменным
             if (themeParams.bg_color) {
                 document.documentElement.style.setProperty('--bg-color', themeParams.bg_color);
                 document.body.style.background = themeParams.bg_color;
@@ -118,30 +113,15 @@ class LoveNumberPuzzle {
                 document.documentElement.style.setProperty('--white', themeParams.button_text_color);
             }
             
-            // Обновляем background элементов
-            document.querySelectorAll('.screen').forEach(screen => {
-                if (themeParams.bg_color) {
-                    screen.style.background = themeParams.bg_color;
-                }
-            });
-            
         } catch (error) {
             console.error("Ошибка применения темы Telegram:", error);
         }
     }
     
     adjustColor(color, amount) {
-        // Простая функция для корректировки цвета
         return '#' + color.replace(/^#/, '').replace(/../g, color => 
             ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
         );
-    }
-    
-    handleViewportChange() {
-        // Адаптация к изменению размера viewport
-        setTimeout(() => {
-            this.render();
-        }, 100);
     }
     
     createFloatingHearts() {
@@ -172,48 +152,9 @@ class LoveNumberPuzzle {
             const targetScreen = document.getElementById(screenName + 'Screen');
             if (targetScreen) {
                 targetScreen.classList.remove('hidden');
-                
-                // Показываем Main Button только на главном экране
-                if (this.isTelegram) {
-                    if (screenName === 'mainMenu') {
-                        this.setupTelegramMainButton();
-                    } else {
-                        this.hideTelegramMainButton();
-                    }
-                }
             }
         } catch (error) {
             console.error("Ошибка показа экрана:", error);
-        }
-    }
-    
-    setupTelegramMainButton() {
-        if (!this.isTelegram) return;
-        
-        try {
-            if (this.tg.MainButton.isVisible) {
-                this.tg.MainButton.hide();
-            }
-            
-            this.tg.MainButton.setText("🎮 Начать игру");
-            this.tg.MainButton.onClick(() => {
-                this.startGame();
-            });
-            this.tg.MainButton.show();
-        } catch (error) {
-            console.error("Ошибка настройки MainButton:", error);
-        }
-    }
-    
-    hideTelegramMainButton() {
-        if (!this.isTelegram) return;
-        
-        try {
-            if (this.tg.MainButton.isVisible) {
-                this.tg.MainButton.hide();
-            }
-        } catch (error) {
-            console.error("Ошибка скрытия MainButton:", error);
         }
     }
     
@@ -225,11 +166,6 @@ class LoveNumberPuzzle {
             if (victoryOverlay && victoryMessage) {
                 victoryMessage.textContent = `Ти пройшла всі ${this.MAX_LEVEL} рівнів! Ти найкраща! 💝`;
                 victoryOverlay.classList.remove('hidden');
-                
-                // Настройка кнопки закрытия для Telegram
-                if (this.isTelegram) {
-                    document.getElementById('closeWebAppBtn').textContent = "📱 Закрити гру";
-                }
             }
         } catch (error) {
             console.error("Ошибка показа экрана победы:", error);
@@ -250,25 +186,43 @@ class LoveNumberPuzzle {
     initializeEventListeners() {
         try {
             // Main menu buttons
-            this.addSafeEventListener('playBtn', 'click', () => this.startGame());
-            this.addSafeEventListener('settingsBtn', 'click', () => this.showScreen('settings'));
-            this.addSafeEventListener('aboutBtn', 'click', () => this.showScreen('about'));
+            document.getElementById('playBtn').addEventListener('click', () => {
+                this.startGame();
+            });
+            
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                this.showScreen('settings');
+            });
+            
+            document.getElementById('aboutBtn').addEventListener('click', () => {
+                this.showScreen('about');
+            });
             
             // Home button in game screen
-            this.addSafeEventListener('homeBtn', 'click', () => this.showScreen('mainMenu'));
+            document.getElementById('homeBtn').addEventListener('click', () => {
+                this.showScreen('mainMenu');
+            });
             
             // Back buttons
-            this.addSafeEventListener('backBtn', 'click', () => this.showScreen('mainMenu'));
-            this.addSafeEventListener('backFromSettingsBtn', 'click', () => this.showScreen('mainMenu'));
-            this.addSafeEventListener('backFromAboutBtn', 'click', () => this.showScreen('mainMenu'));
+            document.getElementById('backBtn').addEventListener('click', () => {
+                this.showScreen('mainMenu');
+            });
+            
+            document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
+                this.showScreen('mainMenu');
+            });
+            
+            document.getElementById('backFromAboutBtn').addEventListener('click', () => {
+                this.showScreen('mainMenu');
+            });
             
             // Victory screen buttons
-            this.addSafeEventListener('playAgainBtn', 'click', () => {
+            document.getElementById('playAgainBtn').addEventListener('click', () => {
                 this.hideVictoryScreen();
                 this.startGame();
             });
             
-            this.addSafeEventListener('closeWebAppBtn', 'click', () => {
+            document.getElementById('closeWebAppBtn').addEventListener('click', () => {
                 if (this.isTelegram) {
                     this.tg.close();
                 } else {
@@ -277,15 +231,17 @@ class LoveNumberPuzzle {
             });
             
             // Settings
-            this.addSafeEventListener('saveSettingsBtn', 'click', () => this.showScreen('mainMenu'));
+            document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+                this.showScreen('mainMenu');
+            });
             
             // Game buttons
-            this.addSafeEventListener('resetBtn', 'click', () => this.resetGame());
-            this.addSafeEventListener('nextLevelBtn', 'click', () => this.nextLevel());
+            document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+            document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
             
-            this.addSafeEventListener('bonus-destroy', 'click', () => this.activateBonus('destroy'));
-            this.addSafeEventListener('bonus-shuffle', 'click', () => this.activateBonus('shuffle'));
-            this.addSafeEventListener('bonus-explosion', 'click', () => this.activateBonus('explosion'));
+            document.getElementById('bonus-destroy').addEventListener('click', () => this.activateBonus('destroy'));
+            document.getElementById('bonus-shuffle').addEventListener('click', () => this.activateBonus('shuffle'));
+            document.getElementById('bonus-explosion').addEventListener('click', () => this.activateBonus('explosion'));
             
             document.addEventListener('contextmenu', e => e.preventDefault());
             
@@ -294,28 +250,10 @@ class LoveNumberPuzzle {
         }
     }
     
-    addSafeEventListener(elementId, event, handler) {
-        try {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.addEventListener(event, handler);
-            } else {
-                console.warn(`Элемент с ID ${elementId} не найден`);
-            }
-        } catch (error) {
-            console.error(`Ошибка добавления обработчика для ${elementId}:`, error);
-        }
-    }
-    
     startGame() {
         try {
             this.initGame(0);
             this.showScreen('game');
-            
-            // Вибрация при запуске игры (если доступно)
-            if (this.isTelegram && this.tg.HapticFeedback) {
-                this.tg.HapticFeedback.impactOccurred('soft');
-            }
         } catch (error) {
             console.error("Ошибка запуска игры:", error);
         }
@@ -323,7 +261,7 @@ class LoveNumberPuzzle {
     
     initGame(levelNum = 0) {
         try {
-            this.currentLevel = Math.max(0, Math.min(levelNum, this.MAX_LEVEL - 1));
+            this.currentLevel = levelNum;
             const level = this.levels[this.currentLevel];
             
             this.xp = 0;
@@ -337,13 +275,8 @@ class LoveNumberPuzzle {
             this.gameState = 'playing';
             this.messageCount = 0;
             
-            // Обновляем счетчик сообщений
-            const messageCountEl = document.getElementById('messageCount');
-            if (messageCountEl) {
-                messageCountEl.textContent = '0';
-            }
+            document.getElementById('messageCount').textContent = '0';
             
-            // Инициализация сетки
             for (let x = 0; x < this.GRID_W; x++) {
                 this.grid[x] = [];
                 for (let y = 0; y < this.GRID_H; y++) {
@@ -388,7 +321,6 @@ class LoveNumberPuzzle {
                         cell.classList.add('merged');
                     }
                     
-                    // Добавляем обработчики событий
                     cell.addEventListener('mousedown', (e) => this.handleCellStart(e, x, y));
                     cell.addEventListener('touchstart', (e) => this.handleCellStart(e, x, y), { passive: false });
                     
@@ -401,7 +333,6 @@ class LoveNumberPuzzle {
                 }
             }
             
-            // Добавляем глобальные обработчики для перемещения
             document.addEventListener('mousemove', (e) => this.handleMove(e));
             document.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
             document.addEventListener('mouseup', () => this.handleEnd());
@@ -435,11 +366,6 @@ class LoveNumberPuzzle {
             this.chainNumbers = [this.grid[x][y].number];
             this.isDragging = true;
             this.render();
-            
-            // Вибрация при выборе ячейки
-            if (this.isTelegram && this.tg.HapticFeedback) {
-                this.tg.HapticFeedback.selectionChanged();
-            }
         } catch (error) {
             console.error("Ошибка обработки начала выбора:", error);
         }
@@ -471,7 +397,6 @@ class LoveNumberPuzzle {
         if (!this.isDragging || this.activeBonus) return;
         
         try {
-            // Если уже выбрана, игнорируем
             if (this.selected.some(sel => sel.x === x && sel.y === y)) return;
             
             const last = this.selected[this.selected.length - 1];
@@ -483,11 +408,6 @@ class LoveNumberPuzzle {
                 this.selected.push({x, y});
                 this.chainNumbers.push(newNum);
                 this.render();
-                
-                // Легкая вибрация при добавлении в цепочку
-                if (this.isTelegram && this.tg.HapticFeedback) {
-                    this.tg.HapticFeedback.selectionChanged();
-                }
             }
         } catch (error) {
             console.error("Ошибка обработки наведения на ячейку:", error);
@@ -547,11 +467,6 @@ class LoveNumberPuzzle {
                 this.maxNumber = newValue;
             }
             
-            // Вибрация при успешном объединении
-            if (this.isTelegram && this.tg.HapticFeedback) {
-                this.tg.HapticFeedback.impactOccurred('light');
-            }
-            
             setTimeout(() => {
                 for (let x = 0; x < this.GRID_W; x++) {
                     for (let y = 0; y < this.GRID_H; y++) {
@@ -576,10 +491,7 @@ class LoveNumberPuzzle {
     showRandomLoveMessage(chainLength) {
         try {
             this.messageCount++;
-            const messageCountEl = document.getElementById('messageCount');
-            if (messageCountEl) {
-                messageCountEl.textContent = this.messageCount;
-            }
+            document.getElementById('messageCount').textContent = this.messageCount;
             
             let message;
             if (chainLength >= 6) {
@@ -719,11 +631,6 @@ class LoveNumberPuzzle {
             this.updateBonusButtons();
             this.render();
             this.showLoveMessage("Бонус активовано! 💫");
-            
-            // Вибрация при активации бонуса
-            if (this.isTelegram && this.tg.HapticFeedback) {
-                this.tg.HapticFeedback.impactOccurred('medium');
-            }
         } catch (error) {
             console.error("Ошибка активации бонуса:", error);
         }
@@ -738,7 +645,6 @@ class LoveNumberPuzzle {
                 }
             }
             
-            // Fisher-Yates shuffle
             for (let i = all.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [all[i], all[j]] = [all[j], all[i]];
@@ -879,12 +785,6 @@ class LoveNumberPuzzle {
                     if (this.grid[x][y].number === level.target) {
                         this.gameState = 'win';
                         this.showLoveMessage(`Вітаю! Ти досягла цілі ${this.formatNumber(level.target)}! 🎉❤️`);
-                        
-                        // Сильная вибрация при победе
-                        if (this.isTelegram && this.tg.HapticFeedback) {
-                            this.tg.HapticFeedback.impactOccurred('heavy');
-                        }
-                        
                         this.autoNextLevel();
                         return;
                     }
@@ -940,15 +840,12 @@ class LoveNumberPuzzle {
             
             levels.push(level);
             
-            // Увеличиваем target для следующего уровня
             target *= 2;
             
-            // Добавляем новые числа каждые 3 уровня
             if (i % 3 === 2 && baseNumbers.length < 5) {
                 baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
             }
             
-            // На высоких уровнях добавляем больше чисел
             if (i >= 15 && baseNumbers.length < 6) {
                 baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
             }
@@ -970,27 +867,22 @@ class LoveNumberPuzzle {
     }
 }
 
-// Инициализация игры когда Telegram Web App готов и DOM загружен
+// Инициализация игры
 function initializeGame() {
     try {
         if (window.Telegram?.WebApp) {
             Telegram.WebApp.ready();
-            console.log("Telegram Web App готов");
         }
         
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOM загружен, инициализация игры...");
             window.game = new LoveNumberPuzzle();
         });
     } catch (error) {
         console.error("Ошибка инициализации игры:", error);
-        
-        // Fallback: запуск игры даже при ошибках
         document.addEventListener('DOMContentLoaded', () => {
             window.game = new LoveNumberPuzzle();
         });
     }
 }
 
-// Запускаем инициализацию
 initializeGame();
