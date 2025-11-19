@@ -15,7 +15,6 @@
       --white: #ffffff;
       --shadow: 0 4px 15px rgba(233, 30, 99, 0.15);
       --cell-color: #ffeef2;
-      --tg-color: #0088cc;
     }
 
     * {
@@ -32,12 +31,12 @@
       padding: 10px;
       min-height: 100vh;
       width: 100%;
-      overflow: hidden;
+      overflow-x: hidden;
       touch-action: manipulation;
     }
 
     .tg-header {
-      background: linear-gradient(45deg, var(--tg-color), #00a2ff);
+      background: linear-gradient(45deg, #0088cc, #00a2ff);
       color: white;
       padding: 12px;
       text-align: center;
@@ -50,20 +49,16 @@
 
     .screen {
       width: 100%;
-      height: calc(100vh - 80px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 10px;
       transition: opacity 0.3s ease, transform 0.3s ease;
-      overflow: hidden;
     }
 
     .screen.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
+      display: none !important;
     }
 
     /* Main Menu Styles */
@@ -73,10 +68,10 @@
     }
 
     .game-title {
-      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      font-size: 2rem;
       font-weight: bold;
       color: var(--primary-color);
-      margin-bottom: clamp(20px, 6vh, 30px);
+      margin-bottom: 20px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
       animation: heartbeat 2s ease-in-out infinite;
     }
@@ -95,18 +90,16 @@
     }
 
     .menu-btn {
-      padding: clamp(14px, 4vh, 18px) 20px;
+      padding: 16px 20px;
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: var(--white);
       border: none;
       border-radius: 15px;
-      font-size: clamp(1rem, 4vw, 1.3rem);
+      font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
     }
 
     .menu-btn:active {
@@ -119,12 +112,8 @@
       border: 3px solid var(--accent-color);
     }
 
-    .menu-btn.tg {
-      background: linear-gradient(45deg, var(--tg-color), #00a2ff);
-    }
-
     .menu-features {
-      margin-top: clamp(20px, 5vh, 30px);
+      margin-top: 20px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
@@ -137,7 +126,7 @@
       border-radius: 10px;
       box-shadow: var(--shadow);
       text-align: center;
-      font-size: clamp(0.7rem, 3vw, 0.9rem);
+      font-size: 0.9rem;
       color: var(--text-color);
       font-weight: 600;
     }
@@ -145,7 +134,6 @@
     /* Game Screen Styles */
     .game-screen {
       justify-content: flex-start;
-      padding: 10px 10px 5px;
     }
 
     .game-header {
@@ -153,9 +141,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
-      margin-bottom: 8px;
-      position: relative;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
     .header-top {
@@ -167,7 +154,7 @@
     }
 
     .header {
-      font-size: clamp(1.2rem, 5vw, 1.6rem);
+      font-size: 1.3rem;
       font-weight: bold;
       color: var(--primary-color);
       text-align: center;
@@ -180,12 +167,11 @@
       color: var(--primary-color);
       border: 2px solid var(--accent-color);
       border-radius: 8px;
-      font-size: clamp(0.9rem, 4vw, 1.1rem);
+      font-size: 0.9rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: var(--shadow);
-      z-index: 10;
     }
 
     .home-btn:active {
@@ -194,10 +180,10 @@
 
     .love-message {
       background: var(--white);
-      padding: 8px 10px;
+      padding: 10px 12px;
       border-radius: 10px;
       box-shadow: var(--shadow);
-      min-height: 50px;
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -206,7 +192,7 @@
     }
 
     .message-text {
-      font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-color);
       line-height: 1.2;
@@ -224,10 +210,10 @@
     .stat-item {
       text-align: center;
       background: var(--white);
-      padding: 5px 8px;
+      padding: 8px 10px;
       border-radius: 8px;
       box-shadow: var(--shadow);
-      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-color);
       flex: 1;
@@ -238,7 +224,7 @@
       height: 12px;
       background: #ffeef2;
       border-radius: 6px;
-      margin: 5px 0;
+      margin: 8px 0;
       overflow: hidden;
       position: relative;
       border: 2px solid var(--accent-color);
@@ -250,7 +236,7 @@
       border-radius: 4px;
       transition: width 0.5s ease;
       position: relative;
-      overflow: hidden;
+      width: 0%;
     }
 
     .xp-bar-text {
@@ -271,21 +257,19 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      flex: 1;
-      min-height: 0;
-      gap: 8px;
+      gap: 10px;
     }
 
     .bonuses {
       display: flex;
-      gap: 5px;
+      gap: 8px;
       justify-content: center;
       flex-wrap: wrap;
     }
 
     .bonus-btn {
-      padding: 6px 8px;
-      font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+      padding: 8px 10px;
+      font-size: 0.8rem;
       border-radius: 6px;
       border: none;
       background: var(--cell-color);
@@ -293,12 +277,7 @@
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s ease;
-      min-width: 60px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
+      min-width: 70px;
       border: 2px solid var(--accent-color);
     }
 
@@ -329,20 +308,20 @@
       flex-wrap: wrap;
       gap: 4px;
       justify-content: center;
-      margin: 3px 0;
+      margin: 5px 0;
       max-height: 60px;
       overflow-y: auto;
     }
 
     .level-btn {
-      padding: 5px 0;
-      width: clamp(28px, 7vw, 32px);
+      padding: 6px 0;
+      width: 32px;
       border-radius: 6px;
       border: 2px solid var(--accent-color);
       background: var(--cell-color);
       color: var(--text-color);
       font-weight: bold;
-      font-size: clamp(0.6rem, 2vw, 0.7rem);
+      font-size: 0.7rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -354,30 +333,25 @@
     }
 
     .grid-container {
-      flex: 1;
-      min-height: 0;
       width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      max-height: 50vh;
+      min-height: 300px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       grid-template-rows: repeat(8, 1fr);
-      gap: 2px;
+      gap: 3px;
       background: var(--white);
       border-radius: 10px;
       box-shadow: var(--shadow);
-      padding: 5px;
+      padding: 8px;
       width: 100%;
       max-width: 400px;
-      height: 100%;
-      max-height: 100%;
-      touch-action: none;
-      user-select: none;
+      aspect-ratio: 5/8;
     }
 
     .cell {
@@ -394,22 +368,13 @@
       border: 1px solid transparent;
     }
 
-    .cell::before {
-      content: '';
-      display: block;
-      padding-top: 100%;
-    }
-
     .cell-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      font-size: 0.8rem;
       font-weight: bold;
       color: var(--text-color);
       user-select: none;
@@ -420,6 +385,12 @@
     .cell.selected {
       transform: scale(0.95);
       border-color: var(--secondary-color);
+    }
+
+    .cell.selected .cell-inner {
+      background: var(--secondary-color);
+      color: var(--white);
+      border-radius: 5px;
     }
 
     .cell.merged .cell-inner {
@@ -450,40 +421,19 @@
     .cell[data-number="512"] { background: #b0e0e6; }
     .cell[data-number="1024"] { background: #ffb347; }
     .cell[data-number="2048"] { background: #c9a0dc; }
-    .cell[data-number="4096"] { background: #77dd77; }
-    .cell[data-number="8192"] { background: #ff6961; }
-    .cell[data-number="16384"] { background: #aec6cf; }
-    .cell[data-number="32768"] { background: #f49ac2; }
-    .cell[data-number="65536"] { background: #cb99c9; }
-    .cell[data-number="131072"] { background: #ffb6c1; }
-    .cell[data-number="262144"] { background: #ffd700; }
-    .cell[data-number="524288"] { background: #98fb98; }
-    .cell[data-number="1048576"] { background: #87ceeb; }
-    .cell[data-number="2097152"] { background: #da70d6; }
-    .cell[data-number="4194304"] { background: #ffa07a; }
-    .cell[data-number="8388608"] { background: #f0e68c; }
-    .cell[data-number="16777216"] { background: #dda0dd; }
-    .cell[data-number="33554432"] { background: #b0e0e6; }
-    .cell[data-number="67108864"] { background: #ffb347; }
-    .cell[data-number="134217728"] { background: #c9a0dc; }
-    .cell[data-number="268435456"] { background: #77dd77; }
-    .cell[data-number="536870912"] { background: #ff6961; }
-    .cell[data-number="1073741824"] { background: #aec6cf; }
 
     .controls {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       justify-content: center;
       flex-wrap: wrap;
-      margin: 8px 0 5px;
+      margin: 10px 0;
       width: 100%;
-      padding: 10px 5px;
+      padding: 10px;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 12px;
       box-shadow: var(--shadow);
       border: 2px solid var(--accent-color);
-      min-height: 60px;
-      align-items: center;
     }
 
     .btn {
@@ -492,7 +442,7 @@
       color: var(--white);
       border: none;
       border-radius: 8px;
-      font-size: clamp(0.8rem, 3vw, 0.9rem);
+      font-size: 0.9rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -509,10 +459,6 @@
       background: var(--white);
       color: var(--primary-color);
       border: 2px solid var(--accent-color);
-    }
-
-    .btn.tg-btn {
-      background: linear-gradient(45deg, var(--tg-color), #00a2ff);
     }
 
     .hearts {
@@ -586,7 +532,7 @@
     }
 
     .victory-overlay.hidden {
-      display: none;
+      display: none !important;
     }
 
     .victory-content {
@@ -599,13 +545,13 @@
     }
 
     .victory-title {
-      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      font-size: 2rem;
       color: var(--primary-color);
       margin-bottom: 20px;
     }
 
     .victory-message {
-      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-size: 1.1rem;
       color: var(--text-color);
       margin-bottom: 30px;
     }
@@ -617,9 +563,9 @@
     }
 
     .settings-title {
-      font-size: clamp(1.5rem, 6vw, 2rem);
+      font-size: 1.8rem;
       color: var(--primary-color);
-      margin-bottom: clamp(20px, 5vh, 30px);
+      margin-bottom: 20px;
     }
 
     .settings-options {
@@ -643,7 +589,7 @@
       color: var(--text-color);
       margin-bottom: 6px;
       display: block;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size: 1rem;
     }
 
     .setting-control {
@@ -651,140 +597,35 @@
       padding: 8px;
       border: 2px solid var(--accent-color);
       border-radius: 8px;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size: 1rem;
       background: var(--white);
     }
 
-    /* Landscape orientation support */
-    @media (max-height: 500px) and (orientation: landscape) {
-      .game-screen {
-        padding: 5px 5px 3px;
-      }
-      
-      .game-header {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 3px;
-        margin-bottom: 3px;
-      }
-      
-      .header-top {
-        width: 100%;
-        margin-bottom: 0;
-      }
-      
-      .love-message {
-        min-height: 40px;
-        flex: 2;
-      }
-      
-      .stats {
-        flex: 1;
-        margin: 0;
-      }
-      
-      .xp-bar {
-        margin: 2px 0;
-      }
-      
-      .grid-container {
-        max-height: 45vh;
-      }
-      
-      .controls {
-        margin: 5px 0 2px;
-        padding: 8px 5px;
-        min-height: 50px;
-      }
-      
-      .level-select {
-        max-height: 40px;
-      }
+    /* About Screen */
+    .about-screen {
+      text-align: center;
+      padding: 20px 15px;
     }
 
-    @media (max-width: 320px) {
-      .menu-buttons {
-        max-width: 250px;
-      }
-      
-      .bonus-btn {
-        min-width: 55px;
-        padding: 5px 6px;
-      }
-      
-      .btn {
-        min-width: 70px;
-        padding: 8px 10px;
-      }
-      
-      .victory-content {
-        padding: 20px;
-      }
-      
-      .level-btn {
-        width: 26px;
-        font-size: 0.6rem;
-      }
+    .about-title {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
     }
 
-    /* Mobile-specific improvements */
-    @media (max-width: 480px) {
-      .controls {
-        position: relative;
-        z-index: 100;
-        margin: 8px 0 5px;
-      }
-      
-      .btn {
-        padding: 10px 8px;
-        font-size: 0.8rem;
-      }
-      
-      .home-btn {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-      }
+    .about-content {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      text-align: center;
     }
 
-    /* Very small screens */
-    @media (max-height: 600px) {
-      .game-content {
-        gap: 5px;
-      }
-      
-      .grid-container {
-        max-height: 45vh;
-      }
-      
-      .controls {
-        margin: 5px 0 3px;
-        padding: 8px 4px;
-        min-height: 55px;
-      }
-    }
-
-    /* Extra small height screens */
-    @media (max-height: 650px) {
-      .game-screen {
-        padding: 8px 10px 3px;
-      }
-      
-      .grid-container {
-        max-height: 48vh;
-      }
-    }
-
-    /* Для очень маленьких экранов - уменьшаем сетку */
-    @media (max-height: 500px) {
-      .grid {
-        grid-template-rows: repeat(8, 1fr);
-        gap: 1px;
-        padding: 3px;
-      }
-      
-      .cell-inner {
-        font-size: clamp(0.6rem, 1.5vw, 0.8rem);
-      }
+    .about-text {
+      font-size: 0.9rem;
+      color: var(--text-color);
+      line-height: 1.4;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -803,7 +644,6 @@
       <div class="victory-title">🎉 Вітаю! 🎉</div>
       <div class="victory-message" id="victoryMessage">Ти пройшла всі рівні! Ти найкраща! 💝</div>
       <div class="menu-buttons">
-        <button class="menu-btn tg-btn" id="shareBtn">📤 Поділитися</button>
         <button class="menu-btn" id="playAgainBtn">🔄 Грати знову</button>
         <button class="menu-btn secondary" id="backToMenuBtn">🏠 Головне меню</button>
       </div>
@@ -815,7 +655,6 @@
     <div class="game-title">❤️ Love Puzzle ❤️</div>
     <div class="menu-buttons">
       <button class="menu-btn" id="playBtn">🎮 Грати</button>
-      <button class="menu-btn tg-btn" id="tgMenuBtn">📱 В Telegram</button>
       <button class="menu-btn secondary" id="settingsBtn">⚙️ Налаштування</button>
       <button class="menu-btn secondary" id="aboutBtn">ℹ️ Про гру</button>
     </div>
@@ -839,7 +678,7 @@
         <div class="message-text" id="messageText">Об'єднуй числа та отримуй любовні фрази! 💕</div>
       </div>
       <div class="stats">
-        <div class="stat-item">Рівень: <span id="currentLevel">1</span>/30</div>
+        <div class="stat-item">Рівень: <span id="currentLevel">1</span>/10</div>
         <div class="stat-item">Ціль: <span id="targetValue">64</span></div>
         <div class="stat-item">Фраз: <span id="messageCount">0</span></div>
       </div>
@@ -873,7 +712,6 @@
       <div class="controls">
         <button class="btn back-btn" id="backBtn">← Назад</button>
         <button class="btn" id="resetBtn">🔄 Скинути</button>
-        <button class="btn tg-btn" id="saveBtn">💾 Зберегти</button>
         <button class="btn" id="nextLevelBtn">⭐ Далі</button>
       </div>
     </div>
@@ -907,38 +745,21 @@
       </div>
     </div>
     <div class="menu-buttons" style="margin-top: 20px;">
-      <button class="menu-btn tg-btn" id="saveSettingsBtn">💾 Зберегти</button>
+      <button class="menu-btn" id="saveSettingsBtn">💾 Зберегти</button>
       <button class="menu-btn secondary" id="backFromSettingsBtn">← Назад</button>
     </div>
   </div>
   
   <!-- About Screen -->
-  <div class="screen settings-screen hidden" id="aboutScreen">
-    <div class="settings-title">Про гру ℹ️</div>
-    <div class="settings-options">
-      <div class="setting-item" style="text-align: center;">
-        <h3 style="font-size: clamp(1.1rem, 4vw, 1.3rem); margin-bottom: 10px;">Love Number Puzzle</h3>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
-          Поєднуйте числа та отримуйте любовні фрази! 💕<br>
-          Об'єднуйте однакові числа або числа, що відрізняються вдвічі.
-        </p>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
-          ✨ Особливості:<br>
-          • 30 рівнів складності<br>
-          • Любовні фрази та анімації<br>
-          • Бонуси та спеціальні можливості<br>
-          • Інтеграція з Telegram<br>
-        </p>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
-          🎮 Керування:<br>
-          • Торкайтеся клітинок для вибору<br>
-          • Об'єднуйте в ланцюжки<br>
-          • Використовуйте бонуси
-        </p>
-      </div>
+  <div class="screen about-screen hidden" id="aboutScreen">
+    <div class="about-title">Про гру ℹ️</div>
+    <div class="about-content">
+      <p class="about-text">Love Number Puzzle - це гра про кохання та числа! 💕</p>
+      <p class="about-text">Об'єднуйте числа та отримуйте любовні послання для вашого коханого!</p>
+      <p class="about-text">🌟 Особливості:<br>• 10 рівнів складності<br>• Любовні фрази<br>• Бонуси та анімації</p>
+      <p class="about-text">🎮 Керування:<br>• Торкайтеся чисел<br>• Створюйте ланцюжки<br>• Використовуйте бонуси</p>
     </div>
     <div class="menu-buttons" style="margin-top: 20px;">
-      <button class="menu-btn tg-btn" id="tgBotBtn">🤖 Наш бот</button>
       <button class="menu-btn secondary" id="backFromAboutBtn">← Назад</button>
     </div>
   </div>
@@ -947,18 +768,17 @@
     // Инициализация Telegram Web App
     let tg = window.Telegram?.WebApp;
     
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
     class LoveNumberPuzzle {
       constructor() {
         this.tg = tg;
         this.isTelegram = !!tg;
         
-        if (this.isTelegram) {
-          tg.expand();
-          tg.enableClosingConfirmation();
-          this.setupTelegramIntegration();
-        }
-        
-        this.levels = this.generateLevels(30);
+        this.levels = this.generateLevels(10);
         this.MAX_LEVEL = this.levels.length;
         
         this.loveMessages = [
@@ -971,27 +791,7 @@
           "Кожна частинка тебе чарівна 🪄",
           "Ти робиш моє життя солодшим 🍯",
           "Ти - моя улюблена панда серед усіх панд 🐼",
-          "Люблю тебе сильніше, ніж коти люблять коробки 📦",
-          "Ти - моє щастя, як морозиво в спекотний день 🍦",
-          "Твоя посмішка - найкрасивіший пейзаж 😊",
-          "Любов до тебе - вічна і безмежна ♾️",
-          "Ти - мій спокій серед бурі 🌊",
-          "З тобою я знайшов справжнє щастя 🥹",
-          "Твоє серце - мій найцінніший скарб 💎",
-          "Кожна мить з тобою - це подарунок 🎁",
-          "Ти робиш моє життя яскравішим 🌈",
-          "Моє кохання до тебе безмежне, як океан 🌊",
-          "Ти - причина моєї посмішки кожного дня 😊",
-          "Твоя любов - найкраще, що сталося в моєму житті 💝",
-          "З тобою я можу досягти будь-чого! 🚀",
-          "Ти - моя муза та натхнення 🎨",
-          "Кожен день з тобою - це нова пригода 🗺️",
-          "Твоя присутність робить все кращим ✨",
-          "Ти - моя тиха гавань у бурхливому морі ⚓",
-          "Люблю тебе більше, ніж слова можуть передати 💌",
-          "Ти - мій щасливий квиток у житті 🎫",
-          "З тобою кожен день - свято 🎉",
-          "Ти - відповідь на всі мої молитви 🙏"
+          "Люблю тебе сильніше, ніж коти люблять коробки 📦"
         ];
         
         this.GRID_W = 5;
@@ -1013,20 +813,8 @@
         this.createFloatingHearts();
         this.initializeEventListeners();
         this.showScreen('mainMenu');
-        this.loadGameState();
         
-        document.addEventListener('dblclick', (e) => e.preventDefault());
-      }
-      
-      setupTelegramIntegration() {
-        // Настройка Telegram Web App
-        this.tg.MainButton.setText("💾 Сохранить игру").show();
-        this.tg.MainButton.onClick(() => this.saveGameState());
-        
-        // Обработчик изменения размера
-        this.tg.onEvent('viewportChanged', () => {
-          this.tg.expand();
-        });
+        console.log("✅ Игра инициализирована!");
       }
       
       generateLevels(count) {
@@ -1038,20 +826,14 @@
           const level = {
             numbers: [...baseNumbers],
             target: target,
-            newNumbers: this.generateNewNumbers(target),
             max: baseNumbers[baseNumbers.length - 1],
-            xpToNext: 10 + Math.floor(i * 2.5)
+            xpToNext: 10 + Math.floor(i * 2)
           };
           
           levels.push(level);
-          
           target *= 2;
           
           if (i % 3 === 2 && baseNumbers.length < 5) {
-            baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
-          }
-          
-          if (i >= 15 && baseNumbers.length < 6) {
             baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
           }
         }
@@ -1059,21 +841,9 @@
         return levels;
       }
       
-      generateNewNumbers(target) {
-        const newNumbers = [];
-        let num = target / 8;
-        for (let i = 0; i < 8; i++) {
-          if (num <= target) {
-            newNumbers.push(num);
-            num *= 2;
-          }
-        }
-        return newNumbers;
-      }
-      
       createFloatingHearts() {
         const container = document.getElementById('floatingHearts');
-        const heartCount = 12;
+        const heartCount = 8;
         
         for (let i = 0; i < heartCount; i++) {
           const heart = document.createElement('div');
@@ -1082,140 +852,42 @@
           heart.style.left = Math.random() * 100 + 'vw';
           heart.style.top = Math.random() * 100 + 'vh';
           heart.style.animationDelay = Math.random() * 5 + 's';
-          heart.style.fontSize = (Math.random() * 0.8 + 0.8) + 'em';
           container.appendChild(heart);
         }
       }
       
       showScreen(screenName) {
-        document.querySelectorAll('.screen').forEach(screen => {
-          screen.classList.add('hidden');
+        console.log("Переключаем экран на:", screenName);
+        
+        // Скрываем все экраны
+        const screens = ['mainMenu', 'game', 'settings', 'about'];
+        screens.forEach(screen => {
+          const element = document.getElementById(screen + 'Screen');
+          if (element) {
+            element.classList.add('hidden');
+          }
         });
         
+        // Показываем целевой экран
         const targetScreen = document.getElementById(screenName + 'Screen');
         if (targetScreen) {
           targetScreen.classList.remove('hidden');
+          console.log("✅ Экран показан:", screenName);
+        } else {
+          console.error("❌ Экран не найден:", screenName);
         }
         
-        // Обновляем кнопку Telegram
-        if (this.isTelegram) {
-          if (screenName === 'game') {
-            this.tg.MainButton.setText("💾 Сохранить игру").show();
-          } else {
-            this.tg.MainButton.hide();
-          }
+        // Инициализируем игру если переходим на игровой экран
+        if (screenName === 'game') {
+          setTimeout(() => {
+            this.initGame();
+          }, 100);
         }
-      }
-      
-      showVictoryScreen() {
-        const victoryOverlay = document.getElementById('victoryOverlay');
-        const victoryMessage = document.getElementById('victoryMessage');
-        
-        victoryMessage.textContent = `Ти пройшла всі ${this.MAX_LEVEL} рівнів! Ти найкраща! 💝`;
-        victoryOverlay.classList.remove('hidden');
-        
-        // Отправляем данные в Telegram
-        if (this.isTelegram) {
-          this.tg.sendData(JSON.stringify({
-            action: 'game_completed',
-            levels: this.MAX_LEVEL,
-            messages: this.messageCount
-          }));
-        }
-      }
-      
-      hideVictoryScreen() {
-        const victoryOverlay = document.getElementById('victoryOverlay');
-        victoryOverlay.classList.add('hidden');
-      }
-      
-      initializeEventListeners() {
-        // Main menu buttons
-        document.getElementById('playBtn').addEventListener('click', () => {
-          this.startGame();
-        });
-        
-        document.getElementById('tgMenuBtn').addEventListener('click', () => {
-          if (this.isTelegram) {
-            this.tg.close();
-          } else {
-            this.showLoveMessage("Открой игру через Telegram бота! 🤖");
-          }
-        });
-        
-        document.getElementById('settingsBtn').addEventListener('click', () => {
-          this.showScreen('settings');
-        });
-        
-        document.getElementById('aboutBtn').addEventListener('click', () => {
-          this.showScreen('about');
-        });
-        
-        // Home button in game screen
-        document.getElementById('homeBtn').addEventListener('click', () => {
-          this.showScreen('mainMenu');
-        });
-        
-        // Back buttons
-        document.getElementById('backBtn').addEventListener('click', () => {
-          this.showScreen('mainMenu');
-        });
-        
-        document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
-          this.showScreen('mainMenu');
-        });
-        
-        document.getElementById('backFromAboutBtn').addEventListener('click', () => {
-          this.showScreen('mainMenu');
-        });
-        
-        // Telegram bot button
-        document.getElementById('tgBotBtn').addEventListener('click', () => {
-          if (this.isTelegram) {
-            this.tg.openTelegramLink('https://t.me/YourBotUsername');
-          } else {
-            window.open('https://t.me/YourBotUsername', '_blank');
-          }
-        });
-        
-        // Victory screen buttons
-        document.getElementById('playAgainBtn').addEventListener('click', () => {
-          this.hideVictoryScreen();
-          this.startGame();
-        });
-        
-        document.getElementById('backToMenuBtn').addEventListener('click', () => {
-          this.hideVictoryScreen();
-          this.showScreen('mainMenu');
-        });
-        
-        document.getElementById('shareBtn').addEventListener('click', () => {
-          this.shareGame();
-        });
-        
-        // Settings
-        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
-          this.showScreen('mainMenu');
-        });
-        
-        // Game buttons
-        document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
-        document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
-        document.getElementById('saveBtn').addEventListener('click', () => this.saveGameState());
-        
-        document.getElementById('bonus-destroy').addEventListener('click', () => this.activateBonus('destroy'));
-        document.getElementById('bonus-shuffle').addEventListener('click', () => this.activateBonus('shuffle'));
-        document.getElementById('bonus-explosion').addEventListener('click', () => this.activateBonus('explosion'));
-        
-        document.addEventListener('contextmenu', e => e.preventDefault());
-      }
-      
-      startGame() {
-        this.initGame(0);
-        this.showScreen('game');
       }
       
       initGame(levelNum = 0) {
+        console.log("🚀 Инициализация игры, уровень:", levelNum);
+        
         this.currentLevel = levelNum;
         const level = this.levels[this.currentLevel];
         
@@ -1229,8 +901,8 @@
         this.activeBonus = null;
         this.gameState = 'playing';
         this.messageCount = 0;
-        document.getElementById('messageCount').textContent = '0';
         
+        // Заполняем сетку
         for (let x = 0; x < this.GRID_W; x++) {
           this.grid[x] = [];
           for (let y = 0; y < this.GRID_H; y++) {
@@ -1244,12 +916,17 @@
         this.render();
         this.updateInfo();
         this.showLoveMessage("Об'єднуй числа та отримуй любовні фрази! 💕");
-        this.updateBonusButtons();
-        this.showLevelSelect();
+        
+        console.log("✅ Игра инициализирована, сетка создана");
       }
       
       render() {
         const gridDiv = document.getElementById('grid');
+        if (!gridDiv) {
+          console.error("❌ grid element not found!");
+          return;
+        }
+        
         gridDiv.innerHTML = '';
         
         for (let y = 0; y < this.GRID_H; y++) {
@@ -1268,41 +945,29 @@
               cell.classList.add('merged');
             }
             
+            // Обработчики событий
             cell.addEventListener('mousedown', (e) => this.handleCellStart(e, x, y));
-            cell.addEventListener('touchstart', (e) => this.handleCellStart(e, x, y), { passive: false });
+            cell.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              this.handleCellStart(e, x, y);
+            }, { passive: false });
             
             const inner = document.createElement('div');
             inner.className = 'cell-inner';
-            inner.textContent = this.formatNumber(this.grid[x][y].number);
+            inner.textContent = this.grid[x][y].number;
             cell.appendChild(inner);
             
             gridDiv.appendChild(cell);
           }
         }
         
-        document.addEventListener('mousemove', (e) => this.handleMove(e));
-        document.addEventListener('touchmove', (e) => this.handleMove(e), { passive: false });
-        document.addEventListener('mouseup', () => this.handleEnd());
-        document.addEventListener('touchend', () => this.handleEnd());
-        
         this.updateXPBar();
+        console.log("✅ Сетка отрисована");
       }
       
       handleCellStart(e, x, y) {
         e.preventDefault();
         if (this.gameState !== 'playing') return;
-        
-        if (this.activeBonus === 'destroy') {
-          this.useDestroyBonus(x, y);
-          return;
-        }
-        
-        if (this.activeBonus === 'explosion') {
-          this.useExplosionBonus(x, y);
-          return;
-        }
-        
-        if (this.isDragging) return;
         
         this.selected = [{x, y}];
         this.chainNumbers = [this.grid[x][y].number];
@@ -1310,174 +975,11 @@
         this.render();
       }
       
-      handleMove(e) {
-        if (!this.isDragging || this.activeBonus) return;
-        
-        e.preventDefault();
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        
-        if (!clientX || !clientY) return;
-        
-        const element = document.elementFromPoint(clientX, clientY);
-        if (element && element.classList.contains('cell')) {
-          const x = parseInt(element.dataset.x);
-          const y = parseInt(element.dataset.y);
-          
-          this.handleCellHover(x, y);
-        }
-      }
-      
-      handleCellHover(x, y) {
-        if (!this.isDragging || this.activeBonus) return;
-        
-        if (this.selected.some(sel => sel.x === x && sel.y === y)) return;
-        
-        const last = this.selected[this.selected.length - 1];
-        if (!this.isAdjacent(last, {x, y})) return;
-        
-        const newNum = this.grid[x][y].number;
-        const prevNum = this.chainNumbers[this.chainNumbers.length - 1];
-        if (newNum === prevNum || newNum === prevNum * 2 || prevNum === newNum * 2) {
-          this.selected.push({x, y});
-          this.chainNumbers.push(newNum);
-          this.render();
-        }
-      }
-      
-      handleEnd() {
-        if (!this.isDragging) return;
-        
-        if (this.selected.length >= 2) {
-          this.mergeChain();
-        } else {
-          this.selected = [];
-          this.chainNumbers = [];
-          this.render();
-        }
-        
-        this.isDragging = false;
-      }
-      
-      isAdjacent(a, b) {
-        return Math.abs(a.x - b.x) <= 1 && Math.abs(a.y - b.y) <= 1;
-      }
-      
-      mergeChain() {
-        const last = this.selected[this.selected.length - 1];
-        const newValue = this.chainNumbers.reduce((sum, val) => sum + val, 0);
-        
-        if (!this.isValidResultNumber(newValue)) {
-          this.showLoveMessage("Спробуй іншу комбінацію, кохана! 💕");
-          this.selected = [];
-          this.chainNumbers = [];
-          this.render();
-          return;
-        }
-        
-        this.grid[last.x][last.y].number = newValue;
-        this.grid[last.x][last.y].merged = true;
-        
-        for (let i = 0; i < this.selected.length - 1; i++) {
-          const {x, y} = this.selected[i];
-          this.grid[x][y].number = this.getRandomInitialNumber();
-          this.grid[x][y].merged = false;
-        }
-        
-        const xpEarned = this.calculateXP(this.selected.length);
-        this.xp += xpEarned;
-        
-        this.showRandomLoveMessage(this.selected.length);
-        
-        if (newValue > this.maxNumber) {
-          this.maxNumber = newValue;
-        }
-        
-        setTimeout(() => {
-          for (let x = 0; x < this.GRID_W; x++) {
-            for (let y = 0; y < this.GRID_H; y++) {
-              this.grid[x][y].merged = false;
-            }
-          }
-          
-          this.render();
-          this.checkWin();
-        }, 350);
-        
-        this.selected = [];
-        this.chainNumbers = [];
-        this.render();
-        this.updateInfo();
-        this.updateBonusButtons();
-      }
-      
-      showRandomLoveMessage(chainLength) {
-        this.messageCount++;
+      updateInfo() {
+        const level = this.levels[this.currentLevel];
+        document.getElementById('currentLevel').textContent = this.currentLevel + 1;
+        document.getElementById('targetValue').textContent = level.target;
         document.getElementById('messageCount').textContent = this.messageCount;
-        
-        let message;
-        if (chainLength >= 6) {
-          message = "Вау! Ти геній кохання! 💖 Наша любов така ж сильна!";
-        } else if (chainLength >= 4) {
-          message = "Чудово! Наша любов росте як твої навички! 🌟";
-        } else {
-          const randomIndex = Math.floor(Math.random() * this.loveMessages.length);
-          message = this.loveMessages[randomIndex];
-        }
-        
-        this.showLoveMessage(message);
-        this.createHeartsAnimation();
-      }
-      
-      showLoveMessage(text) {
-        const messageEl = document.getElementById('messageText');
-        messageEl.classList.remove('fade-in');
-        setTimeout(() => {
-          messageEl.textContent = text;
-          messageEl.classList.add('fade-in');
-        }, 100);
-      }
-      
-      createHeartsAnimation() {
-        const heartsContainer = document.getElementById('hearts');
-        heartsContainer.innerHTML = '';
-        const heartCount = 5;
-        
-        for (let i = 0; i < heartCount; i++) {
-          const heart = document.createElement('div');
-          heart.className = 'heart';
-          heart.innerHTML = '❤️';
-          heart.style.left = Math.random() * 80 + 10 + '%';
-          heart.style.animationDelay = Math.random() * 0.5 + 's';
-          heartsContainer.appendChild(heart);
-        }
-      }
-      
-      formatNumber(num) {
-        if (num >= 1_000_000_000) return (num/1_000_000_000).toFixed(num % 1_000_000_000 === 0 ? 0 : 1) + "B";
-        if (num >= 1_000_000) return (num/1_000_000).toFixed(num % 1_000_000 === 0 ? 0 : 1) + "M";
-        if (num >= 10_000) return (num/1_000).toFixed(0) + "К";
-        if (num >= 1_000) return (num/1_000).toFixed(num % 1_000 === 0 ? 0 : 1) + "К";
-        return num;
-      }
-      
-      isValidResultNumber(num) {
-        const level = this.levels[this.currentLevel];
-        return level.numbers.includes(num) || level.newNumbers.includes(num);
-      }
-      
-      getRandomInitialNumber() {
-        const level = this.levels[this.currentLevel];
-        return level.numbers[Math.floor(Math.random() * level.numbers.length)];
-      }
-      
-      calculateXP(chainLen) {
-        if (chainLen === 2) return 1;
-        if (chainLen === 3) return 4;
-        if (chainLen === 4) return 8;
-        if (chainLen === 5) return 15;
-        if (chainLen >= 6) return 25;
-        return 0;
       }
       
       updateXPBar() {
@@ -1486,246 +988,90 @@
         document.getElementById('xpText').textContent = `${this.xp}/${this.xpToNext}`;
       }
       
-      updateInfo() {
-        const level = this.levels[this.currentLevel];
-        document.getElementById('currentLevel').textContent = this.currentLevel + 1;
-        document.getElementById('targetValue').textContent = this.formatNumber(level.target);
+      showLoveMessage(text) {
+        const messageEl = document.getElementById('messageText');
+        if (messageEl) {
+          messageEl.textContent = text;
+        }
       }
       
-      activateBonus(bonusType) {
-        if (this.activeBonus === bonusType) {
-          this.activeBonus = null;
-          this.updateBonusButtons();
-          this.render();
-          return;
-        }
+      initializeEventListeners() {
+        // Main menu buttons
+        document.getElementById('playBtn').addEventListener('click', () => {
+          console.log("🎮 Нажата кнопка Играть");
+          this.showScreen('game');
+        });
         
-        if (this.xp < this.bonusCosts[bonusType]) {
-          this.showLoveMessage("Недостатньо очків кохання! ❤️‍🔥");
-          return;
-        }
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+          console.log("⚙️ Нажата кнопка Настройки");
+          this.showScreen('settings');
+        });
         
-        if (bonusType === 'shuffle') {
-          this.xp -= this.bonusCosts.shuffle;
-          this.shuffleGrid();
-          this.showLoveMessage("Поле перемішано з любов'ю! 💫");
-          this.updateBonusButtons();
-          return;
-        }
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+          console.log("ℹ️ Нажата кнопка О игре");
+          this.showScreen('about');
+        });
         
-        this.activeBonus = bonusType;
-        this.updateBonusButtons();
-        this.render();
-        this.showLoveMessage("Бонус активовано! 💫");
-      }
-      
-      shuffleGrid() {
-        const all = [];
-        for (let x = 0; x < this.GRID_W; x++) {
-          for (let y = 0; y < this.GRID_H; y++) {
-            all.push(this.grid[x][y].number);
-          }
-        }
+        // Game screen buttons
+        document.getElementById('homeBtn').addEventListener('click', () => {
+          this.showScreen('mainMenu');
+        });
         
-        for (let i = all.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [all[i], all[j]] = [all[j], all[i]];
-        }
+        document.getElementById('backBtn').addEventListener('click', () => {
+          this.showScreen('mainMenu');
+        });
         
-        let k = 0;
-        for (let x = 0; x < this.GRID_W; x++) {
-          for (let y = 0; y < this.GRID_H; y++) {
-            this.grid[x][y].number = all[k++];
-          }
-        }
+        document.getElementById('resetBtn').addEventListener('click', () => {
+          this.initGame(this.currentLevel);
+        });
         
-        this.render();
-      }
-      
-      useDestroyBonus(x, y) {
-        this.grid[x][y].number = this.getRandomInitialNumber();
-        this.xp -= this.bonusCosts.destroy;
-        this.activeBonus = null;
-        this.updateBonusButtons();
-        this.render();
-        this.updateInfo();
-        this.showLoveMessage("Клітинку розбито з любов'ю! 💖");
-      }
-      
-      useExplosionBonus(x, y) {
-        for (let dx = -1; dx <= 1; dx++) {
-          for (let dy = -1; dy <= 1; dy++) {
-            const nx = x + dx;
-            const ny = y + dy;
-            
-            if (nx >= 0 && nx < this.GRID_W && ny >= 0 && ny < this.GRID_H) {
-              this.grid[nx][ny].number = this.getRandomInitialNumber();
-            }
-          }
-        }
-        
-        this.xp -= this.bonusCosts.explosion;
-        this.activeBonus = null;
-        this.updateBonusButtons();
-        this.render();
-        this.updateInfo();
-        this.showLoveMessage("Вибух кохання! 💥❤️");
-      }
-      
-      updateBonusButtons() {
-        const bonuses = ['destroy', 'shuffle', 'explosion'];
-        
-        bonuses.forEach(bonus => {
-          const btn = document.getElementById(`bonus-${bonus}`);
-          const cost = this.bonusCosts[bonus];
-          
-          if (this.activeBonus === bonus) {
-            btn.classList.add('active');
-          } else {
-            btn.classList.remove('active');
-          }
-          
-          if (this.xp < cost && this.activeBonus !== bonus) {
-            btn.disabled = true;
-          } else {
-            btn.disabled = false;
+        document.getElementById('nextLevelBtn').addEventListener('click', () => {
+          if (this.currentLevel < this.MAX_LEVEL - 1) {
+            this.initGame(this.currentLevel + 1);
           }
         });
-      }
-      
-      showLevelSelect() {
-        const sel = document.getElementById('level-select');
-        sel.innerHTML = "";
         
-        for (let i = 0; i < this.levels.length; i++) {
-          const btn = document.createElement('button');
-          btn.className = "level-btn";
-          btn.textContent = i + 1;
-          
-          if (i === this.currentLevel) {
-            btn.classList.add("selected");
-          }
-          
-          btn.addEventListener('click', () => {
-            this.currentLevel = i;
-            this.initGame(i);
-          });
-          
-          sel.appendChild(btn);
-        }
-      }
-      
-      autoNextLevel() {
-        if (this.currentLevel < this.MAX_LEVEL - 1) {
-          setTimeout(() => {
-            this.showLoveMessage(`Автоматичний перехід на рівень ${this.currentLevel + 2} через 3 секунди... ⏱️`);
-            setTimeout(() => {
-              this.initGame(this.currentLevel + 1);
-              this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові можливості! 🚀`);
-            }, 3000);
-          }, 2000);
-        } else {
-          setTimeout(() => {
-            this.showVictoryScreen();
-          }, 2000);
-        }
-      }
-      
-      checkWin() {
-        const level = this.levels[this.currentLevel];
+        // Settings screen buttons
+        document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
+          this.showScreen('mainMenu');
+        });
         
-        for (let x = 0; x < this.GRID_W; x++) {
-          for (let y = 0; y < this.GRID_H; y++) {
-            if (this.grid[x][y].number === level.target) {
-              this.gameState = 'win';
-              this.showLoveMessage(`Вітаю! Ти досягла цілі ${this.formatNumber(level.target)}! 🎉❤️`);
-              this.autoNextLevel();
-              return;
-            }
-          }
-        }
+        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+          this.showScreen('mainMenu');
+        });
         
-        if (this.xp >= this.xpToNext) {
-          this.showLoveMessage("Ти готова до нового рівня кохання! 💖");
-        }
-      }
-      
-      nextLevel() {
-        if (this.currentLevel < this.MAX_LEVEL - 1) {
-          if (this.xp >= this.xpToNext) {
-            this.initGame(this.currentLevel + 1);
-            this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові виклики! 🌟`);
-          } else {
-            this.showLoveMessage(`Потрібно ${this.xpToNext} очків кохання! ❤️`);
-          }
-        } else {
-          this.showVictoryScreen();
-        }
-      }
-      
-      resetGame() {
-        this.initGame(this.currentLevel);
-      }
-      
-      saveGameState() {
-        const gameData = {
-          level: this.currentLevel,
-          xp: this.xp,
-          messages_unlocked: this.messageCount,
-          max_level_reached: Math.max(this.currentLevel, this.loadGameState().max_level_reached || 0),
-          timestamp: new Date().toISOString()
-        };
+        // About screen buttons
+        document.getElementById('backFromAboutBtn').addEventListener('click', () => {
+          this.showScreen('mainMenu');
+        });
         
-        // Сохраняем локально
-        localStorage.setItem('love_puzzle_save', JSON.stringify(gameData));
+        // Victory screen buttons
+        document.getElementById('playAgainBtn').addEventListener('click', () => {
+          document.getElementById('victoryOverlay').classList.add('hidden');
+          this.initGame(0);
+        });
         
-        // Отправляем в Telegram если в WebView
-        if (this.isTelegram) {
-          this.tg.sendData(JSON.stringify({
-            action: 'save_game',
-            game_data: gameData
-          }));
-        }
+        document.getElementById('backToMenuBtn').addEventListener('click', () => {
+          document.getElementById('victoryOverlay').classList.add('hidden');
+          this.showScreen('mainMenu');
+        });
         
-        this.showLoveMessage("Прогресс збережено! 💾");
-      }
-      
-      loadGameState() {
-        try {
-          const saved = localStorage.getItem('love_puzzle_save');
-          if (saved) {
-            const data = JSON.parse(saved);
-            this.currentLevel = data.level || 0;
-            this.xp = data.xp || 0;
-            this.messageCount = data.messages_unlocked || 0;
-            return data;
-          }
-        } catch (e) {
-          console.log('No saved game found');
-        }
-        return {};
-      }
-      
-      shareGame() {
-        const shareText = `Я граю в Love Number Puzzle! 🎮💖\nДосягнута уровня ${this.currentLevel + 1} і відкрила ${this.messageCount} любовних послань!`;
-        
-        if (this.isTelegram) {
-          this.tg.openTelegramLink(`https://t.me/share/url?url=https://t.me/YourBotUsername&text=${encodeURIComponent(shareText)}`);
-        } else if (navigator.share) {
-          navigator.share({
-            title: 'Love Number Puzzle',
-            text: shareText,
-            url: 'https://t.me/YourBotUsername'
-          });
-        } else {
-          this.showLoveMessage("Скопіюйте посилання на бота: https://t.me/YourBotUsername");
-        }
+        console.log("✅ Все обработчики событий установлены");
       }
     }
 
+    // Запускаем игру когда страница загружена
     document.addEventListener('DOMContentLoaded', () => {
-      new LoveNumberPuzzle();
+      console.log("📄 DOM загружен, запускаем игру...");
+      window.game = new LoveNumberPuzzle();
     });
+
+    // Обработчик для Telegram
+    if (tg) {
+      tg.onEvent('viewportChanged', () => {
+        tg.expand();
+      });
+    }
   </script>
 </body>
 </html>
