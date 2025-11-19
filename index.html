@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>💖 Love Number Puzzle - Для моєї коханої 💖</title>
   <style>
+    /* Основные стили с увеличенными размерами */
     :root {
       --primary-color: #e91e63;
       --secondary-color: #ff4081;
@@ -21,6 +22,7 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
     body {
@@ -62,10 +64,10 @@
     }
 
     .game-title {
-      font-size: clamp(2rem, 8vw, 3rem);
+      font-size: 2.5rem;
       font-weight: bold;
       color: var(--primary-color);
-      margin-bottom: clamp(20px, 6vh, 30px);
+      margin-bottom: 30px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
       animation: heartbeat 2s ease-in-out infinite;
     }
@@ -76,8 +78,8 @@
     }
 
     .romantic-subtitle {
-      font-size: 1.5rem;
-      color: #e91e63;
+      font-size: 1.3rem;
+      color: var(--primary-color);
       margin-bottom: 2rem;
       text-align: center;
       font-weight: bold;
@@ -92,12 +94,12 @@
     }
 
     .menu-btn {
-      padding: clamp(16px, 5vh, 20px) 25px;
+      padding: 18px 20px;
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: var(--white);
       border: none;
-      border-radius: 20px;
-      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      border-radius: 15px;
+      font-size: 1.3rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -117,7 +119,7 @@
     }
 
     .menu-features {
-      margin-top: clamp(20px, 5vh, 30px);
+      margin-top: 30px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -127,10 +129,10 @@
     .feature-item {
       background: var(--white);
       padding: 15px 10px;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: var(--shadow);
       text-align: center;
-      font-size: clamp(0.8rem, 3vw, 1rem);
+      font-size: 1rem;
       color: var(--text-color);
       font-weight: 600;
     }
@@ -160,7 +162,7 @@
     }
 
     .header {
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-size: 1.4rem;
       font-weight: bold;
       color: var(--primary-color);
       text-align: center;
@@ -172,8 +174,8 @@
       background: var(--white);
       color: var(--primary-color);
       border: 2px solid var(--accent-color);
-      border-radius: 10px;
-      font-size: clamp(1rem, 4vw, 1.2rem);
+      border-radius: 8px;
+      font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -188,7 +190,7 @@
     .love-message {
       background: var(--white);
       padding: 10px 12px;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: var(--shadow);
       min-height: 60px;
       display: flex;
@@ -199,10 +201,10 @@
     }
 
     .message-text {
-      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-size: 1.1rem;
       font-weight: 600;
       color: var(--text-color);
-      line-height: 1.3;
+      line-height: 1.2;
       text-align: center;
     }
 
@@ -218,9 +220,9 @@
       text-align: center;
       background: var(--white);
       padding: 8px 10px;
-      border-radius: 10px;
+      border-radius: 8px;
       box-shadow: var(--shadow);
-      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-color);
       flex: 1;
@@ -228,7 +230,7 @@
 
     .xp-bar {
       width: 100%;
-      height: 16px;
+      height: 15px;
       background: #ffeef2;
       border-radius: 8px;
       margin: 8px 0;
@@ -255,7 +257,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: bold;
       color: var(--text-color);
     }
@@ -277,8 +279,8 @@
     }
 
     .bonus-btn {
-      padding: 10px 12px;
-      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      padding: 8px 10px;
+      font-size: 0.9rem;
       border-radius: 8px;
       border: none;
       background: var(--cell-color);
@@ -314,28 +316,28 @@
     .bonus-cost {
       color: var(--primary-color);
       font-weight: bold;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
 
     .level-select {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       justify-content: center;
       margin: 5px 0;
-      max-height: 70px;
+      max-height: 50px;
       overflow-y: auto;
     }
 
     .level-btn {
-      padding: 8px 0;
-      width: clamp(35px, 8vw, 40px);
-      border-radius: 8px;
+      padding: 6px 0;
+      width: 35px;
+      border-radius: 6px;
       border: 2px solid var(--accent-color);
       background: var(--cell-color);
       color: var(--text-color);
       font-weight: bold;
-      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -344,6 +346,14 @@
       background: var(--primary-color);
       color: var(--white);
       border-color: var(--primary-color);
+    }
+
+    .swipe-hint {
+      text-align: center;
+      color: var(--primary-color);
+      font-weight: bold;
+      margin: 5px 0;
+      font-size: 1rem;
     }
 
     .grid-container {
@@ -366,7 +376,7 @@
       box-shadow: var(--shadow);
       padding: 8px;
       width: 100%;
-      max-width: 500px;
+      max-width: 95vw;
       height: 100%;
       max-height: 100%;
       touch-action: none;
@@ -377,7 +387,7 @@
       position: relative;
       background: var(--cell-color);
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(233, 30, 99, 0.2);
+      box-shadow: 0 2px 4px rgba(233, 30, 99, 0.2);
       transition: all 0.2s ease;
       cursor: pointer;
       display: flex;
@@ -403,7 +413,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(0.9rem, 3vw, 1.2rem);
+      font-size: 1.1rem;
       font-weight: bold;
       color: var(--text-color);
       user-select: none;
@@ -414,8 +424,11 @@
     .cell.selected {
       transform: scale(0.92);
       border-color: var(--secondary-color);
-      box-shadow: 0 0 15px rgba(255, 64, 129, 0.6);
-      z-index: 10;
+      background: var(--secondary-color);
+    }
+
+    .cell.selected .cell-inner {
+      color: var(--white);
     }
 
     .cell.merged .cell-inner {
@@ -446,11 +459,6 @@
     .cell[data-number="512"] { background: #b0e0e6; }
     .cell[data-number="1024"] { background: #ffb347; }
     .cell[data-number="2048"] { background: #c9a0dc; }
-    .cell[data-number="4096"] { background: #77dd77; }
-    .cell[data-number="8192"] { background: #ff6961; }
-    .cell[data-number="16384"] { background: #aec6cf; }
-    .cell[data-number="32768"] { background: #f49ac2; }
-    .cell[data-number="65536"] { background: #cb99c9; }
 
     .controls {
       display: flex;
@@ -461,7 +469,7 @@
       width: 100%;
       padding: 12px 8px;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
+      border-radius: 12px;
       box-shadow: var(--shadow);
       border: 2px solid var(--accent-color);
       min-height: 70px;
@@ -473,14 +481,14 @@
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: var(--white);
       border: none;
-      border-radius: 10px;
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: var(--shadow);
       flex: 1;
-      min-width: 90px;
+      min-width: 100px;
     }
 
     .btn:active {
@@ -491,17 +499,6 @@
       background: var(--white);
       color: var(--primary-color);
       border: 2px solid var(--accent-color);
-    }
-
-    .swipe-hint {
-      text-align: center;
-      color: var(--primary-color);
-      font-weight: bold;
-      margin: 10px 0;
-      font-size: 1rem;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 8px;
-      border-radius: 10px;
     }
 
     .hearts {
@@ -525,6 +522,15 @@
       100% { transform: translateY(-30px) rotate(360deg); opacity: 0; }
     }
 
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .floating-hearts {
       position: fixed;
       top: 0;
@@ -538,7 +544,7 @@
     .floating-heart {
       position: absolute;
       font-size: 1.2rem;
-      opacity: 0.2;
+      opacity: 0.1;
       animation: floatAround 15s linear infinite;
     }
 
@@ -610,13 +616,13 @@
     }
 
     .victory-title {
-      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      font-size: 2.2rem;
       color: var(--primary-color);
       margin-bottom: 20px;
     }
 
     .victory-message {
-      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-size: 1.2rem;
       color: var(--text-color);
       margin-bottom: 30px;
     }
@@ -628,9 +634,9 @@
     }
 
     .settings-title {
-      font-size: clamp(1.5rem, 6vw, 2rem);
+      font-size: 2rem;
       color: var(--primary-color);
-      margin-bottom: clamp(20px, 5vh, 30px);
+      margin-bottom: 30px;
     }
 
     .settings-options {
@@ -644,7 +650,7 @@
     .setting-item {
       background: var(--white);
       padding: 15px;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: var(--shadow);
       text-align: left;
     }
@@ -654,48 +660,81 @@
       color: var(--text-color);
       margin-bottom: 8px;
       display: block;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size: 1rem;
     }
 
     .setting-control {
       width: 100%;
       padding: 10px;
       border: 2px solid var(--accent-color);
-      border-radius: 10px;
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      border-radius: 8px;
+      font-size: 1rem;
       background: var(--white);
     }
 
-    /* Mobile-specific improvements */
-    @media (max-width: 480px) {
-      .grid {
-        gap: 3px;
-        padding: 6px;
-      }
-      
-      .cell {
-        min-height: 40px;
+    /* Chain visualization */
+    .chain-line {
+      position: absolute;
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+      height: 6px;
+      border-radius: 3px;
+      pointer-events: none;
+      z-index: 50;
+      transform-origin: 0 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-height: 700px) {
+      .grid-container {
+        max-height: 50vh;
       }
       
       .cell-inner {
-        font-size: clamp(0.8rem, 2.5vw, 1rem);
+        font-size: 1rem;
+      }
+      
+      .menu-btn {
+        padding: 15px 18px;
+        font-size: 1.1rem;
       }
     }
 
-    /* Very small screens */
-    @media (max-width: 350px) {
-      .grid {
-        gap: 2px;
-        padding: 4px;
+    @media (max-height: 600px) {
+      .grid-container {
+        max-height: 45vh;
       }
       
-      .cell {
-        min-height: 35px;
+      .game-header {
+        margin-bottom: 5px;
+      }
+      
+      .love-message {
+        min-height: 50px;
+      }
+      
+      .controls {
+        min-height: 60px;
+        padding: 8px 6px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .game-title {
+        font-size: 2rem;
+      }
+      
+      .header {
+        font-size: 1.2rem;
       }
       
       .bonus-btn {
         min-width: 70px;
-        padding: 8px 10px;
+        font-size: 0.8rem;
+      }
+      
+      .btn {
+        min-width: 85px;
+        padding: 10px 12px;
       }
     }
   </style>
@@ -827,18 +866,18 @@
     <div class="settings-title">Про наше кохання 🌹</div>
     <div class="settings-options">
       <div class="setting-item" style="text-align: center;">
-        <h3 style="font-size: clamp(1.1rem, 4vw, 1.3rem); margin-bottom: 10px;">Love Number Puzzle</h3>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
+        <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Love Number Puzzle</h3>
+        <p style="margin: 8px 0; line-height: 1.3; font-size: 0.9rem;">
           Ця гра створена з любов'ю для моєї найкращої дружини! 💕<br>
           Кожна фраза - це частинка мого серця, кожне число - це крок до нашого щастя.
         </p>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
+        <p style="margin: 8px 0; line-height: 1.3; font-size: 0.9rem;">
           🌟 Кожен рівень - це нове визнання в коханні:<br>
           • 30 рівнів = 30 причин тебе кохати<br>
           • 40+ любовних фраз з мого серця<br>
           • Безмежна любов у кожному дотику<br>
         </p>
-        <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);">
+        <p style="margin: 8px 0; line-height: 1.3; font-size: 0.9rem;">
           Ти - моє щастя, моя любов, моє все! 💖<br>
           Назавжди твій...
         </p>
@@ -943,7 +982,7 @@
           this.messageCount = 0;
           
           this.lastTouchPos = null;
-          this.currentTouchId = null;
+          this.chainLines = [];
           
           this.createEnhancedFloatingHearts();
           this.initializeEventListeners();
@@ -956,7 +995,7 @@
           const container = document.getElementById('floatingHearts');
           if (!container) return;
           
-          const heartCount = 20;
+          const heartCount = 25;
           container.innerHTML = '';
           
           const heartTypes = ['❤️', '💖', '💕', '💗', '💓', '💞', '💘', '💝'];
@@ -1086,12 +1125,7 @@
             e.preventDefault();
             if (this.gameState !== 'playing') return;
             
-            // Используем только первое касание
-            if (this.currentTouchId !== null) return;
-            
             const touch = e.touches[0];
-            this.currentTouchId = touch.identifier;
-            
             const cell = this.getCellFromPoint(touch.clientX, touch.clientY);
             
             if (cell) {
@@ -1102,26 +1136,16 @@
             }
           }, { passive: false });
           
-          // Обработка движения пальца
-          grid.addEventListener('touchmove', (e) => {
+          // Обработка движения пальца - на document для лучшего отслеживания
+          document.addEventListener('touchmove', (e) => {
+            if (!this.isDragging) return;
             e.preventDefault();
-            if (!this.isDragging || this.currentTouchId === null) return;
             
-            // Находим наше касание по идентификатору
-            let touch = null;
-            for (let i = 0; i < e.touches.length; i++) {
-              if (e.touches[i].identifier === this.currentTouchId) {
-                touch = e.touches[i];
-                break;
-              }
-            }
-            
-            if (!touch) return;
-            
+            const touch = e.touches[0];
             this.lastTouchPos = { x: touch.clientX, y: touch.clientY };
             
             const cell = this.getCellFromPoint(touch.clientX, touch.clientY);
-            if (cell && !this.selected.some(sel => sel.x === cell.x && sel.y === cell.y)) {
+            if (cell) {
               this.handleCellHover(cell.x, cell.y);
             }
             
@@ -1130,33 +1154,41 @@
           }, { passive: false });
           
           // Обработка окончания касания
-          grid.addEventListener('touchend', (e) => {
-            if (this.isDragging && this.currentTouchId !== null) {
-              // Проверяем, было ли это наше касание
-              let ourTouchEnded = false;
-              for (let i = 0; i < e.changedTouches.length; i++) {
-                if (e.changedTouches[i].identifier === this.currentTouchId) {
-                  ourTouchEnded = true;
-                  break;
-                }
-              }
-              
-              if (ourTouchEnded) {
-                this.handleEnd();
-                this.isDragging = false;
-                this.lastTouchPos = null;
-                this.currentTouchId = null;
-              }
-            }
-          });
-          
-          // Отмена касания
-          grid.addEventListener('touchcancel', (e) => {
-            if (this.isDragging && this.currentTouchId !== null) {
+          document.addEventListener('touchend', (e) => {
+            if (this.isDragging) {
               this.handleEnd();
               this.isDragging = false;
               this.lastTouchPos = null;
-              this.currentTouchId = null;
+              this.clearChainLines();
+            }
+          });
+          
+          // Также для мыши (для тестирования) оставим на grid
+          grid.addEventListener('mousedown', (e) => {
+            if (this.gameState !== 'playing') return;
+            
+            const cell = this.getCellFromPoint(e.clientX, e.clientY);
+            if (cell) {
+              this.isDragging = true;
+              this.handleCellStart(e, cell.x, cell.y);
+              this.createTouchGlow(e.clientX, e.clientY);
+            }
+          });
+          
+          grid.addEventListener('mousemove', (e) => {
+            if (!this.isDragging) return;
+            
+            const cell = this.getCellFromPoint(e.clientX, e.clientY);
+            if (cell) {
+              this.handleCellHover(cell.x, cell.y);
+            }
+          });
+          
+          grid.addEventListener('mouseup', () => {
+            if (this.isDragging) {
+              this.handleEnd();
+              this.isDragging = false;
+              this.clearChainLines();
             }
           });
         }
@@ -1168,8 +1200,7 @@
           const rect = grid.getBoundingClientRect();
           
           // Проверяем, находится ли точка внутри сетки
-          if (clientX < rect.left || clientX > rect.right || 
-              clientY < rect.top || clientY > rect.bottom) {
+          if (clientX < rect.left || clientX > rect.right || clientY < rect.top || clientY > rect.bottom) {
             return null;
           }
           
@@ -1187,6 +1218,48 @@
           }
           
           return null;
+        }
+        
+        getCellCenter(cellX, cellY) {
+          const grid = document.getElementById('grid');
+          if (!grid) return { x: 0, y: 0 };
+          
+          const rect = grid.getBoundingClientRect();
+          const cellWidth = rect.width / this.GRID_W;
+          const cellHeight = rect.height / this.GRID_H;
+          
+          return {
+            x: rect.left + cellX * cellWidth + cellWidth / 2,
+            y: rect.top + cellY * cellHeight + cellHeight / 2
+          };
+        }
+        
+        drawChainLine(fromX, fromY, toX, toY) {
+          const fromCenter = this.getCellCenter(fromX, fromY);
+          const toCenter = this.getCellCenter(toX, toY);
+          
+          const line = document.createElement('div');
+          line.className = 'chain-line';
+          
+          const length = Math.sqrt(Math.pow(toCenter.x - fromCenter.x, 2) + Math.pow(toCenter.y - fromCenter.y, 2));
+          const angle = Math.atan2(toCenter.y - fromCenter.y, toCenter.x - fromCenter.x) * 180 / Math.PI;
+          
+          line.style.width = length + 'px';
+          line.style.left = fromCenter.x + 'px';
+          line.style.top = fromCenter.y + 'px';
+          line.style.transform = `rotate(${angle}deg)`;
+          
+          document.body.appendChild(line);
+          this.chainLines.push(line);
+        }
+        
+        clearChainLines() {
+          this.chainLines.forEach(line => {
+            if (line.parentNode) {
+              line.parentNode.removeChild(line);
+            }
+          });
+          this.chainLines = [];
         }
         
         showScreen(screenName) {
@@ -1254,7 +1327,8 @@
             this.activeBonus = null;
             this.gameState = 'playing';
             this.messageCount = 0;
-            this.currentTouchId = null;
+            
+            document.getElementById('messageCount').textContent = '0';
             
             // Инициализация сетки
             for (let x = 0; x < this.GRID_W; x++) {
@@ -1335,10 +1409,11 @@
             this.chainNumbers = [this.grid[x][y].number];
             this.render();
             
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            this.createRomanticParticle(clientX, clientY, '💕');
+            this.createRomanticParticle(
+              e.clientX || (e.touches && e.touches[0].clientX), 
+              e.clientY || (e.touches && e.touches[0].clientY), 
+              '💕'
+            );
           } catch (error) {
             console.error("Ошибка обработки начала выбора:", error);
           }
@@ -1348,16 +1423,29 @@
           if (!this.isDragging || this.activeBonus) return;
           
           try {
+            // Проверяем, что ячейка уже не выбрана
+            if (this.selected.some(sel => sel.x === x && sel.y === y)) {
+              return;
+            }
+            
             const last = this.selected[this.selected.length - 1];
-            if (!this.isAdjacent(last, {x, y})) return;
+            
+            // Проверяем смежность
+            if (!this.isAdjacent(last, {x, y})) {
+              return;
+            }
             
             const newNum = this.grid[x][y].number;
             const prevNum = this.chainNumbers[this.chainNumbers.length - 1];
             
-            // Проверяем, можно ли объединить числа
+            // Проверяем возможность объединения
             if (newNum === prevNum || newNum === prevNum * 2 || prevNum === newNum * 2) {
               this.selected.push({x, y});
               this.chainNumbers.push(newNum);
+              
+              // Рисуем линию между ячейками
+              this.drawChainLine(last.x, last.y, x, y);
+              
               this.render();
               
               if (this.lastTouchPos) {
@@ -1402,18 +1490,15 @@
               return;
             }
             
-            // Обновляем последнюю ячейку новым значением
             this.grid[last.x][last.y].number = newValue;
             this.grid[last.x][last.y].merged = true;
             
-            // Сбрасываем остальные ячейки в цепочке
             for (let i = 0; i < this.selected.length - 1; i++) {
               const {x, y} = this.selected[i];
               this.grid[x][y].number = this.getRandomInitialNumber();
               this.grid[x][y].merged = false;
             }
             
-            // Начисляем опыт
             const xpEarned = this.calculateXP(this.selected.length);
             this.xp += xpEarned;
             
@@ -1423,7 +1508,6 @@
               this.maxNumber = newValue;
             }
             
-            // Сбрасываем анимацию слияния и проверяем победу
             setTimeout(() => {
               for (let x = 0; x < this.GRID_W; x++) {
                 for (let y = 0; y < this.GRID_H; y++) {
@@ -1453,7 +1537,6 @@
             let message;
             if (chainLength >= 6) {
               message = "Вау! Ти геній кохання! 💖 Наша любов така ж сильна!";
-              // Специальные эффекты для длинных цепочек
               for (let i = 0; i < 10; i++) {
                 setTimeout(() => {
                   this.createRomanticParticle(
@@ -1512,8 +1595,8 @@
         formatNumber(num) {
           if (num >= 1_000_000_000) return (num/1_000_000_000).toFixed(num % 1_000_000_000 === 0 ? 0 : 1) + "B";
           if (num >= 1_000_000) return (num/1_000_000).toFixed(num % 1_000_000 === 0 ? 0 : 1) + "M";
-          if (num >= 10_000) return (num/1_000).toFixed(0) + "K";
-          if (num >= 1_000) return (num/1_000).toFixed(num % 1_000 === 0 ? 0 : 1) + "K";
+          if (num >= 10_000) return (num/1_000).toFixed(0) + "К";
+          if (num >= 1_000) return (num/1_000).toFixed(num % 1_000 === 0 ? 0 : 1) + "К";
           return num.toString();
         }
         
@@ -1608,7 +1691,6 @@
               }
             }
             
-            // Тасование Фишера-Йейтса
             for (let i = all.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
               [all[i], all[j]] = [all[j], all[i]];
