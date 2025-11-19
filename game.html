@@ -54,7 +54,6 @@
       align-items: center;
       justify-content: center;
       padding: 10px;
-      transition: opacity 0.3s ease, transform 0.3s ease;
     }
 
     .screen.hidden {
@@ -765,18 +764,23 @@
   </div>
 
   <script>
-    // Инициализация Telegram Web App
-    let tg = window.Telegram?.WebApp;
-    
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-
     class LoveNumberPuzzle {
       constructor() {
-        this.tg = tg;
-        this.isTelegram = !!tg;
+        this.tg = window.Telegram?.WebApp;
+        this.isTelegram = !!this.tg;
+        
+        console.log("🎮 Инициализация игры...");
+        console.log("Telegram Web App:", this.isTelegram);
+        
+        if (this.tg) {
+          try {
+            this.tg.ready();
+            this.tg.expand();
+            console.log("✅ Telegram Web App инициализирован");
+          } catch (e) {
+            console.error("❌ Ошибка инициализации Telegram Web App:", e);
+          }
+        }
         
         this.levels = this.generateLevels(10);
         this.MAX_LEVEL = this.levels.length;
@@ -814,7 +818,7 @@
         this.initializeEventListeners();
         this.showScreen('mainMenu');
         
-        console.log("✅ Игра инициализирована!");
+        console.log("✅ Игра успешно инициализирована!");
       }
       
       generateLevels(count) {
@@ -857,7 +861,7 @@
       }
       
       showScreen(screenName) {
-        console.log("Переключаем экран на:", screenName);
+        console.log("🔄 Переключаем экран на:", screenName);
         
         // Скрываем все экраны
         const screens = ['mainMenu', 'game', 'settings', 'about'];
@@ -920,7 +924,6 @@
         console.log("✅ Игра инициализирована, сетка создана");
       }
 
-      // ИСПРАВЛЕННАЯ ЛОГИКА ОБЪЕДИНЕНИЯ ЦЕПОЧЕК
       render() {
         const gridDiv = document.getElementById('grid');
         if (!gridDiv) {
@@ -976,9 +979,7 @@
           }
         }
 
-        // Глобальные обработчики
         this.setupGlobalHandlers();
-        
         this.updateXPBar();
         console.log("✅ Сетка отрисована");
       }
@@ -987,6 +988,7 @@
         // Удаляем старые обработчики
         document.removeEventListener('mouseup', this.handleEndBound);
         document.removeEventListener('touchend', this.handleEndBound);
+        document.removeEventListener('mousemove', this.handleMoveBound);
         
         // Создаем привязанные методы
         this.handleEndBound = this.handleEnd.bind(this);
@@ -1295,9 +1297,9 @@
     });
 
     // Обработчик для Telegram
-    if (tg) {
-      tg.onEvent('viewportChanged', () => {
-        tg.expand();
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.onEvent('viewportChanged', () => {
+        window.Telegram.WebApp.expand();
       });
     }
   </script>
