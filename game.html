@@ -764,18 +764,21 @@
   </div>
 
 <script>
-    // Инициализация Telegram Web App
-    let tg = window.Telegram?.WebApp;
-    
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-
     class LoveNumberPuzzle {
       constructor() {
-        this.tg = tg;
-        this.isTelegram = !!tg;
+        // Инициализация Telegram Web App
+        this.tg = window.Telegram?.WebApp || null;
+        this.isTelegram = !!this.tg;
+        
+        if (this.tg) {
+          try {
+            this.tg.ready();
+            this.tg.expand();
+            console.log("✅ Telegram Web App инициализирован");
+          } catch (e) {
+            console.error("❌ Ошибка инициализации Telegram Web App:", e);
+          }
+        }
         
         this.levels = this.generateLevels(10);
         this.MAX_LEVEL = this.levels.length;
@@ -808,6 +811,10 @@
         this.activeBonus = null;
         this.gameState = 'playing';
         this.messageCount = 0;
+        
+        // Инициализация глобальных обработчиков
+        this.handleEndBound = null;
+        this.handleMoveBound = null;
         
         this.createFloatingHearts();
         this.initializeEventListeners();
@@ -842,6 +849,8 @@
       
       createFloatingHearts() {
         const container = document.getElementById('floatingHearts');
+        if (!container) return;
+        
         const heartCount = 8;
         
         for (let i = 0; i < heartCount; i++) {
@@ -866,6 +875,12 @@
             element.classList.add('hidden');
           }
         });
+        
+        // Скрываем overlay победы
+        const victoryOverlay = document.getElementById('victoryOverlay');
+        if (victoryOverlay) {
+          victoryOverlay.classList.add('hidden');
+        }
         
         // Показываем целевой экран
         const targetScreen = document.getElementById(screenName + 'Screen');
@@ -919,7 +934,6 @@
         console.log("✅ Игра инициализирована, сетка создана");
       }
 
-      // ИСПРАВЛЕННАЯ ЛОГИКА ОБЪЕДИНЕНИЯ ЦЕПОЧЕК
       render() {
         const gridDiv = document.getElementById('grid');
         if (!gridDiv) {
@@ -975,17 +989,18 @@
           }
         }
 
-        // Глобальные обработчики
         this.setupGlobalHandlers();
-        
         this.updateXPBar();
         console.log("✅ Сетка отрисована");
       }
 
       setupGlobalHandlers() {
         // Удаляем старые обработчики
-        document.removeEventListener('mouseup', this.handleEndBound);
-        document.removeEventListener('touchend', this.handleEndBound);
+        if (this.handleEndBound) {
+          document.removeEventListener('mouseup', this.handleEndBound);
+          document.removeEventListener('touchend', this.handleEndBound);
+          document.removeEventListener('mousemove', this.handleMoveBound);
+        }
         
         // Создаем привязанные методы
         this.handleEndBound = this.handleEnd.bind(this);
@@ -1041,8 +1056,15 @@
         if (!this.isDragging || this.activeBonus) return;
         
         e.preventDefault();
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        let clientX, clientY;
+        
+        if (e.type === 'mousemove') {
+          clientX = e.clientX;
+          clientY = e.clientY;
+        } else if (e.touches && e.touches[0]) {
+          clientX = e.touches[0].clientX;
+          clientY = e.touches[0].clientY;
+        }
         
         if (!clientX || !clientY) return;
         
@@ -1175,6 +1197,8 @@
 
       createHeartsAnimation() {
         const heartsContainer = document.getElementById('hearts');
+        if (!heartsContainer) return;
+        
         heartsContainer.innerHTML = '';
         const heartCount = 3;
         
@@ -1190,29 +1214,56 @@
 
       checkWin() {
         const level = this.levels[this.currentLevel];
+        let targetReached = false;
         
         for (let x = 0; x < this.GRID_W; x++) {
           for (let y = 0; y < this.GRID_H; y++) {
             if (this.grid[x][y].number === level.target) {
-              this.gameState = 'win';
-              this.showLoveMessage(`Вітаю! Ти досягла цілі ${level.target}! 🎉❤️`);
-              return;
+              targetReached = true;
+              break;
             }
           }
+          if (targetReached) break;
+        }
+        
+        if (targetReached && this.gameState === 'playing') {
+          this.gameState = 'win';
+          this.showLoveMessage(`Вітаю! Ти досягла цілі ${level.target}! 🎉❤️`);
+          this.showVictoryScreen();
+        }
+      }
+
+      showVictoryScreen() {
+        const victoryOverlay = document.getElementById('victoryOverlay');
+        const victoryMessage = document.getElementById('victoryMessage');
+        
+        if (victoryOverlay && victoryMessage) {
+          victoryMessage.textContent = `Ти пройшла рівень ${this.currentLevel + 1}! Ти найкраща! 💝`;
+          victoryOverlay.classList.remove('hidden');
         }
       }
       
       updateInfo() {
         const level = this.levels[this.currentLevel];
-        document.getElementById('currentLevel').textContent = this.currentLevel + 1;
-        document.getElementById('targetValue').textContent = level.target;
-        document.getElementById('messageCount').textContent = this.messageCount;
+        
+        const currentLevelEl = document.getElementById('currentLevel');
+        const targetValueEl = document.getElementById('targetValue');
+        const messageCountEl = document.getElementById('messageCount');
+        
+        if (currentLevelEl) currentLevelEl.textContent = this.currentLevel + 1;
+        if (targetValueEl) targetValueEl.textContent = level.target;
+        if (messageCountEl) messageCountEl.textContent = this.messageCount;
       }
       
       updateXPBar() {
-        const percent = Math.min(1, this.xp / this.xpToNext);
-        document.getElementById('xpBar').style.width = (percent * 100) + '%';
-        document.getElementById('xpText').textContent = `${this.xp}/${this.xpToNext}`;
+        const xpBar = document.getElementById('xpBar');
+        const xpText = document.getElementById('xpText');
+        
+        if (xpBar && xpText) {
+          const percent = Math.min(1, this.xp / this.xpToNext);
+          xpBar.style.width = (percent * 100) + '%';
+          xpText.textContent = `${this.xp}/${this.xpToNext}`;
+        }
       }
       
       showLoveMessage(text) {
@@ -1224,61 +1275,77 @@
       
       initializeEventListeners() {
         // Main menu buttons
-        document.getElementById('playBtn').addEventListener('click', () => {
+        const playBtn = document.getElementById('playBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const aboutBtn = document.getElementById('aboutBtn');
+        
+        if (playBtn) playBtn.addEventListener('click', () => {
           console.log("🎮 Нажата кнопка Играть");
           this.showScreen('game');
         });
         
-        document.getElementById('settingsBtn').addEventListener('click', () => {
+        if (settingsBtn) settingsBtn.addEventListener('click', () => {
           console.log("⚙️ Нажата кнопка Настройки");
           this.showScreen('settings');
         });
         
-        document.getElementById('aboutBtn').addEventListener('click', () => {
+        if (aboutBtn) aboutBtn.addEventListener('click', () => {
           console.log("ℹ️ Нажата кнопка О игре");
           this.showScreen('about');
         });
         
         // Game screen buttons
-        document.getElementById('homeBtn').addEventListener('click', () => {
+        const homeBtn = document.getElementById('homeBtn');
+        const backBtn = document.getElementById('backBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const nextLevelBtn = document.getElementById('nextLevelBtn');
+        
+        if (homeBtn) homeBtn.addEventListener('click', () => {
           this.showScreen('mainMenu');
         });
         
-        document.getElementById('backBtn').addEventListener('click', () => {
+        if (backBtn) backBtn.addEventListener('click', () => {
           this.showScreen('mainMenu');
         });
         
-        document.getElementById('resetBtn').addEventListener('click', () => {
+        if (resetBtn) resetBtn.addEventListener('click', () => {
           this.initGame(this.currentLevel);
         });
         
-        document.getElementById('nextLevelBtn').addEventListener('click', () => {
+        if (nextLevelBtn) nextLevelBtn.addEventListener('click', () => {
           if (this.currentLevel < this.MAX_LEVEL - 1) {
             this.initGame(this.currentLevel + 1);
           }
         });
         
         // Settings screen buttons
-        document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
+        const backFromSettingsBtn = document.getElementById('backFromSettingsBtn');
+        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+        
+        if (backFromSettingsBtn) backFromSettingsBtn.addEventListener('click', () => {
           this.showScreen('mainMenu');
         });
         
-        document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+        if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', () => {
           this.showScreen('mainMenu');
         });
         
         // About screen buttons
-        document.getElementById('backFromAboutBtn').addEventListener('click', () => {
+        const backFromAboutBtn = document.getElementById('backFromAboutBtn');
+        if (backFromAboutBtn) backFromAboutBtn.addEventListener('click', () => {
           this.showScreen('mainMenu');
         });
         
         // Victory screen buttons
-        document.getElementById('playAgainBtn').addEventListener('click', () => {
+        const playAgainBtn = document.getElementById('playAgainBtn');
+        const backToMenuBtn = document.getElementById('backToMenuBtn');
+        
+        if (playAgainBtn) playAgainBtn.addEventListener('click', () => {
           document.getElementById('victoryOverlay').classList.add('hidden');
           this.initGame(0);
         });
         
-        document.getElementById('backToMenuBtn').addEventListener('click', () => {
+        if (backToMenuBtn) backToMenuBtn.addEventListener('click', () => {
           document.getElementById('victoryOverlay').classList.add('hidden');
           this.showScreen('mainMenu');
         });
@@ -1294,9 +1361,9 @@
     });
 
     // Обработчик для Telegram
-    if (tg) {
-      tg.onEvent('viewportChanged', () => {
-        tg.expand();
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.onEvent('viewportChanged', () => {
+        window.Telegram.WebApp.expand();
       });
     }
   </script>
