@@ -67,11 +67,10 @@ class LoveNumberPuzzle {
         this.activeBonus = null;
         this.gameState = 'playing';
         this.messageCount = 0;
-        this.totalMoves = 0;
         
         this.createFloatingHearts();
+        this.setupSaveSystem();
         this.initializeEventListeners();
-        this.setupAutoSave();
         this.showScreen('mainMenu');
         
         document.addEventListener('dblclick', (e) => e.preventDefault());
@@ -124,128 +123,6 @@ class LoveNumberPuzzle {
         return '#' + color.replace(/^#/, '').replace(/../g, color => 
             ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
         );
-    }
-    
-    // Методы для работы с прогрессом
-    async saveProgress() {
-        try {
-            const gameState = {
-                currentLevel: this.currentLevel,
-                grid: this.grid,
-                xp: this.xp,
-                xpToNext: this.xpToNext,
-                maxNumber: this.maxNumber,
-                messageCount: this.messageCount,
-                gameState: this.gameState,
-                timestamp: Date.now()
-            };
-
-            // Сохраняем в локальное хранилище как резервную копию
-            localStorage.setItem('lovePuzzleProgress', JSON.stringify(gameState));
-            
-            // Отправляем в бота через Web App
-            if (this.tg) {
-                const progressData = {
-                    type: 'save_progress',
-                    progress: gameState,
-                    moves: this.totalMoves || 0
-                };
-                
-                this.tg.sendData(JSON.stringify(progressData));
-            }
-            
-            console.log('Прогресс сохранен');
-            this.showLoveMessage("💾 Прогресс сохранен!");
-        } catch (error) {
-            console.error('Ошибка сохранения прогресса:', error);
-            this.showLoveMessage("❌ Ошибка сохранения прогресса");
-        }
-    }
-
-    async loadProgress() {
-        try {
-            // Пробуем загрузить из локального хранилища
-            const saved = localStorage.getItem('lovePuzzleProgress');
-            if (saved) {
-                const progress = JSON.parse(saved);
-                
-                // Проверяем, не устарели ли данные (больше 7 дней)
-                const weekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-                if (progress.timestamp && progress.timestamp > weekAgo) {
-                    this.currentLevel = progress.currentLevel || 0;
-                    this.grid = progress.grid || [];
-                    this.xp = progress.xp || 0;
-                    this.xpToNext = progress.xpToNext || 10;
-                    this.maxNumber = progress.maxNumber || 8;
-                    this.messageCount = progress.messageCount || 0;
-                    this.gameState = progress.gameState || 'playing';
-                    
-                    console.log('Прогресс загружен из локального хранилища');
-                    return true;
-                }
-            }
-            
-            // Запрашиваем прогресс у бота
-            if (this.tg) {
-                const loadRequest = {
-                    type: 'load_progress'
-                };
-                this.tg.sendData(JSON.stringify(loadRequest));
-            }
-            
-            return false;
-        } catch (error) {
-            console.error('Ошибка загрузки прогресса:', error);
-            return false;
-        }
-    }
-
-    // Автосохранение при изменениях
-    setupAutoSave() {
-        // Сохраняем при каждом значимом действии
-        const originalMethods = {
-            mergeChain: this.mergeChain.bind(this),
-            activateBonus: this.activateBonus.bind(this),
-            nextLevel: this.nextLevel.bind(this),
-            resetGame: this.resetGame.bind(this)
-        };
-        
-        // Переопределяем методы с автосохранением
-        this.mergeChain = (...args) => {
-            const result = originalMethods.mergeChain(...args);
-            setTimeout(() => this.saveProgress(), 100);
-            return result;
-        };
-        
-        this.activateBonus = (...args) => {
-            const result = originalMethods.activateBonus(...args);
-            setTimeout(() => this.saveProgress(), 100);
-            return result;
-        };
-        
-        this.nextLevel = (...args) => {
-            const result = originalMethods.nextLevel(...args);
-            setTimeout(() => this.saveProgress(), 100);
-            return result;
-        };
-        
-        this.resetGame = (...args) => {
-            const result = originalMethods.resetGame(...args);
-            setTimeout(() => this.saveProgress(), 100);
-            return result;
-        };
-        
-        // Сохраняем при закрытии/перезагрузке
-        window.addEventListener('beforeunload', () => {
-            this.saveProgress();
-        });
-        
-        // Периодическое сохранение каждые 30 секунд
-        setInterval(() => {
-            if (this.gameState === 'playing') {
-                this.saveProgress();
-            }
-        }, 30000);
     }
     
     createFloatingHearts() {
@@ -360,9 +237,14 @@ class LoveNumberPuzzle {
             });
             
             // Game buttons
+            /* The above code is adding an event listener to a button with the id 'resetBtn'. When the
+            button is clicked, it will call the `resetGame()` function. */
             document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
+            document.getElementById('saveBtn').addEventListener('click', () => {
+                this.saveGame();
+                this.showLoveMessage("Игра сохранена! 💾");
+            });
             document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
-            document.getElementById('saveBtn').addEventListener('click', () => this.saveProgress());
             
             document.getElementById('bonus-destroy').addEventListener('click', () => this.activateBonus('destroy'));
             document.getElementById('bonus-shuffle').addEventListener('click', () => this.activateBonus('shuffle'));
@@ -375,26 +257,16 @@ class LoveNumberPuzzle {
         }
     }
     
-    async startGame() {
+    startGame() {
         try {
-            console.log('Starting game...');
-            const hasProgress = await this.loadProgress();
-            
-            if (!hasProgress) {
+            // Пытаемся загрузить сохраненную игру
+            if (!this.loadGame()) {
+                // Если сохранения нет, начинаем новую игру
                 this.initGame(0);
-            } else {
-                this.render();
-                this.updateInfo();
-                this.updateBonusButtons();
-                this.showLevelSelect();
-                this.showLoveMessage("Добро пожаловать обратно, моя любовь! 💖 Твой прогресс загружен.");
             }
-            
             this.showScreen('game');
         } catch (error) {
             console.error("Ошибка запуска игры:", error);
-            this.initGame(0);
-            this.showScreen('game');
         }
     }
     
@@ -413,7 +285,6 @@ class LoveNumberPuzzle {
             this.activeBonus = null;
             this.gameState = 'playing';
             this.messageCount = 0;
-            this.totalMoves = 0;
             
             document.getElementById('messageCount').textContent = '0';
             
@@ -431,6 +302,7 @@ class LoveNumberPuzzle {
             this.updateInfo();
             this.showLoveMessage("Об'єднуй числа та отримуй любовні фрази! 💕");
             this.updateBonusButtons();
+            this.autoSave();
             this.showLevelSelect();
             
         } catch (error) {
@@ -578,8 +450,6 @@ class LoveNumberPuzzle {
     
     mergeChain() {
         try {
-            this.totalMoves++;
-            
             const last = this.selected[this.selected.length - 1];
             const newValue = this.chainNumbers.reduce((sum, val) => sum + val, 0);
             
@@ -814,6 +684,7 @@ class LoveNumberPuzzle {
             this.render();
             this.updateInfo();
             this.showLoveMessage("Клітинку розбито з любов'ю! 💖");
+            this.autoSave();
         } catch (error) {
             console.error("Ошибка использования бонуса разрушения:", error);
         }
@@ -838,6 +709,7 @@ class LoveNumberPuzzle {
             this.render();
             this.updateInfo();
             this.showLoveMessage("Вибух кохання! 💥❤️");
+            this.autoSave();
         } catch (error) {
             console.error("Ошибка использования бонуса взрыва:", error);
         }
@@ -947,6 +819,7 @@ class LoveNumberPuzzle {
                 if (this.xp >= this.xpToNext) {
                     this.initGame(this.currentLevel + 1);
                     this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові виклики! 🌟`);
+                    this.autoSave();
                 } else {
                     this.showLoveMessage(`Потрібно ${this.xpToNext} очків кохання! ❤️`);
                 }
@@ -961,6 +834,7 @@ class LoveNumberPuzzle {
     resetGame() {
         try {
             this.initGame(this.currentLevel);
+            this.autoSave();
         } catch (error) {
             console.error("Ошибка сброса игры:", error);
         }
@@ -1007,24 +881,105 @@ class LoveNumberPuzzle {
         }
         return newNumbers;
     }
-}
 
-// Инициализация игры
-function initializeGame() {
-    try {
-        if (window.Telegram?.WebApp) {
-            Telegram.WebApp.ready();
+    // Метод сохранения игры
+    saveGame() {
+        const gameData = {
+            current_level: this.currentLevel,
+            xp: this.xp,
+            message_count: this.messageCount,
+            game_state: {
+                grid: this.grid,
+                selected: this.selected,
+                max_number: this.maxNumber,
+                active_bonus: this.activeBonus
+            },
+            timestamp: Date.now()
+        };
+        
+        // Сохранение в Telegram WebApp
+        if (this.tg && this.tg.sendData) {
+            this.tg.sendData(JSON.stringify(gameData));
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            window.game = new LoveNumberPuzzle();
-        });
-    } catch (error) {
-        console.error("Ошибка инициализации игры:", error);
-        document.addEventListener('DOMContentLoaded', () => {
-            window.game = new LoveNumberPuzzle();
+        // Локальное сохранение в localStorage
+        try {
+            localStorage.setItem('lovePuzzleSave', JSON.stringify(gameData));
+        } catch (e) {
+            console.log('Local storage not available');
+        }
+        
+        console.log('Игра сохранена');
+    }
+
+    // Метод загрузки игры
+    loadGame() {
+        // Пытаемся загрузить из localStorage
+        try {
+            const saved = localStorage.getItem('lovePuzzleSave');
+            if (saved) {
+                const gameData = JSON.parse(saved);
+                this.applySaveData(gameData);
+                return true;
+            }
+        } catch (e) {
+            console.log('Ошибка загрузки из localStorage');
+        }
+        return false;
+    }
+
+    // Применение сохраненных данных
+    applySaveData(gameData) {
+        this.currentLevel = gameData.current_level || 0;
+        this.xp = gameData.xp || 0;
+        this.messageCount = gameData.message_count || 0;
+        
+        if (gameData.game_state) {
+            this.grid = gameData.game_state.grid || [];
+            this.selected = gameData.game_state.selected || [];
+            this.maxNumber = gameData.game_state.max_number || 8;
+            this.activeBonus = gameData.game_state.active_bonus || null;
+        }
+        
+        this.updateInfo();
+        this.render();
+        this.showLoveMessage("Игра загружена! 💾");
+    }
+
+    // Автосохранение
+    autoSave() {
+        this.saveGame();
+    }
+
+    // Настройка системы сохранений
+    setupSaveSystem() {
+        // Автосохранение каждые 30 секунд
+        setInterval(() => {
+            this.autoSave();
+        }, 30000);
+        
+        // Сохранение при закрытии страницы
+        window.addEventListener('beforeunload', () => {
+            this.saveGame();
         });
     }
-}
 
-initializeGame();
+// Инициализация игры
+// function initializeGame() {
+    // try {
+        // if (window.Telegram?.WebApp) {
+            // Telegram.WebApp.ready();
+        }
+        
+        // document.addEventListener('DOMContentLoaded', () => {
+            // window.game = new LoveNumberPuzzle();
+        // });
+    // } catch (error) {
+        // console.error("Ошибка инициализации игры:", error);
+        // document.addEventListener('DOMContentLoaded', () => {
+            // window.game = new LoveNumberPuzzle();
+        // });
+    // }
+// }
+
+// initializeGame();
