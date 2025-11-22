@@ -920,3 +920,11 @@ body {
         transform: none;
     }
 }
+
+/* Отключаем жесты браузера и улучшает отклик тача для #grid */
+#grid {
+  touch-action: none; /* ключевое — предотвращает скролл/зум при свайпе на элементе */
+  -ms-touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

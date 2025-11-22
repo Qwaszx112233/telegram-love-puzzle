@@ -91,7 +91,6 @@ class LoveNumberPuzzle {
     // ==================== СИСТЕМА СОХРАНЕНИЯ ====================
     
     getUserId() {
-        // Для Telegram Web App используем ID пользователя, для браузера - локальное хранилище
         if (this.tg && this.tg.initDataUnsafe && this.tg.initDataUnsafe.user) {
             return 'tg_' + this.tg.initDataUnsafe.user.id;
         }
@@ -99,14 +98,12 @@ class LoveNumberPuzzle {
     }
     
     setupAutoSave() {
-        // Автосохранение каждые 30 секунд
         setInterval(() => {
             if (this.gameState === 'playing' && !this.isSaving) {
                 this.saveGameProgress();
             }
         }, 30000);
         
-        // Сохранение при закрытии страницы
         window.addEventListener('beforeunload', () => {
             this.saveGameProgress();
         });
@@ -131,15 +128,10 @@ class LoveNumberPuzzle {
                 version: '1.0'
             };
             
-            // Сохраняем в localStorage
             localStorage.setItem('lovePuzzleSave_' + this.userId, JSON.stringify(gameState));
             localStorage.setItem('lovePuzzleUserId', this.userId);
             
-            console.log('Прогресс сохранен:', {
-                level: this.currentLevel,
-                xp: this.xp,
-                messages: this.messageCount
-            });
+            console.log('Прогресс сохранен');
         } catch (error) {
             console.error('Ошибка сохранения:', error);
         } finally {
@@ -154,7 +146,6 @@ class LoveNumberPuzzle {
                 const savedData = JSON.parse(saved);
                 
                 if (this.isValidSaveData(savedData)) {
-                    // Восстанавливаем состояние игры
                     this.currentLevel = savedData.currentLevel || 0;
                     this.xp = savedData.xp || 0;
                     this.messageCount = savedData.messageCount || 0;
@@ -162,16 +153,10 @@ class LoveNumberPuzzle {
                     this.maxNumber = savedData.maxNumber || 8;
                     this.gameState = savedData.gameState || 'playing';
                     
-                    // Обновляем интерфейс
                     this.updateInfo();
                     this.updateBonusButtons();
                     
-                    console.log('Прогресс загружен:', {
-                        level: this.currentLevel,
-                        xp: this.xp,
-                        messages: this.messageCount
-                    });
-                    
+                    console.log('Прогресс загружен');
                     this.showLoveMessage("Прогресс загружен! Продолжаем игру! 💾");
                     return true;
                 }
@@ -308,43 +293,43 @@ class LoveNumberPuzzle {
     
     initializeEventListeners() {
         try {
-             // Main menu buttons
+            // Main menu buttons
             document.getElementById('playBtn').addEventListener('click', () => {
                 this.startGame();
             });
-        
+            
             document.getElementById('settingsBtn').addEventListener('click', () => {
                 this.showScreen('settings');
             });
-        
+            
             document.getElementById('aboutBtn').addEventListener('click', () => {
                 this.showScreen('about');
             });
-        
+            
             // Home button in game screen
             document.getElementById('homeBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+            
             // Back buttons
             document.getElementById('backBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+            
             document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+            
             document.getElementById('backFromAboutBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+            
             // Victory screen buttons
             document.getElementById('playAgainBtn').addEventListener('click', () => {
                 this.hideVictoryScreen();
                 this.startGame();
             });
-        
+            
             document.getElementById('closeWebAppBtn').addEventListener('click', () => {
                 if (this.isTelegram) {
                     this.tg.close();
@@ -352,138 +337,31 @@ class LoveNumberPuzzle {
                     this.showScreen('mainMenu');
                 }
             });
-        
+            
             // Settings
             document.getElementById('saveSettingsBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+            
             // Game buttons
             document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
             document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
             document.getElementById('saveGameBtn').addEventListener('click', () => this.manualSave());
             document.getElementById('resetProgressBtn').addEventListener('click', () => this.resetProgress());
-        
+            
             document.getElementById('bonus-destroy').addEventListener('click', () => this.activateBonus('destroy'));
             document.getElementById('bonus-shuffle').addEventListener('click', () => this.activateBonus('shuffle'));
             document.getElementById('bonus-explosion').addEventListener('click', () => this.activateBonus('explosion'));
-        
+            
             document.addEventListener('contextmenu', e => e.preventDefault());
-        
-            // ДОБАВЛЕНО: Инициализация обработки касаний для сетки
-            this.initializeGridTouchHandling();
-        
+            
         } catch (error) {
             console.error("Ошибка инициализации обработчиков событий:", error);
         }
     }
-
-    initializeGridTouchHandling() {
-        const grid = document.getElementById('grid');
-        if (!grid) return;
-
-        // Обработчики для мыши
-        grid.addEventListener('mousedown', (e) => this.handlePointerStart(e));
-        document.addEventListener('mousemove', (e) => this.handlePointerMove(e));
-        document.addEventListener('mouseup', () => this.handlePointerEnd());
-
-        // Обработчики для касаний
-        grid.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.handlePointerStart(e.touches[0]);
-        }, { passive: false });
-
-        grid.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            this.handlePointerMove(e.touches[0]);
-        }, { passive: false });
-
-        grid.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.handlePointerEnd();
-        }, { passive: false });
-
-        // Предотвращаем контекстное меню
-        grid.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-
-    handlePointerStart(e) {
-        if (this.gameState !== 'playing') return;
-    
-        const cell = this.getCellFromPoint(e.clientX, e.clientY);
-        if (!cell) return;
-
-        if (this.activeBonus === 'destroy') {
-            this.useDestroyBonus(cell.x, cell.y);
-            return;
-        }
-
-        if (this.activeBonus === 'explosion') {
-            this.useExplosionBonus(cell.x, cell.y);
-            return;
-        }
-
-        this.isDragging = true;
-        this.selected = [{x: cell.x, y: cell.y}];
-        this.chainNumbers = [this.grid[cell.x][cell.y].number];
-        this.render();
-    }
-
-    handlePointerMove(e) {
-        if (!this.isDragging || this.activeBonus) return;
-    
-        const cell = this.getCellFromPoint(e.clientX, e.clientY);
-        if (!cell) return;
-
-        this.handleCellHover(cell.x, cell.y);
-    }
-
-    handlePointerEnd() {
-        if (!this.isDragging) return;
-    
-        if (this.selected.length >= 2) {
-            this.mergeChain();
-        } else {
-            this.selected = [];
-            this.chainNumbers = [];
-            this.render();
-        }
-    
-        this.isDragging = false;
-    }
-
-    getCellFromPoint(clientX, clientY) {
-        const grid = document.getElementById('grid');
-        if (!grid) return null;
-    
-        const rect = grid.getBoundingClientRect();
-    
-        // Проверяем, что клик внутри сетки
-        if (clientX < rect.left || clientX > rect.right || 
-            clientY < rect.top || clientY > rect.bottom) {
-            return null;
-        }
-    
-        const cellWidth = rect.width / this.GRID_W;
-        const cellHeight = rect.height / this.GRID_H;
-    
-        const gridX = clientX - rect.left;
-        const gridY = clientY - rect.top;
-    
-        const cellX = Math.floor(gridX / cellWidth);
-        const cellY = Math.floor(gridY / cellHeight);
-    
-        if (cellX >= 0 && cellX < this.GRID_W && cellY >= 0 && cellY < this.GRID_H) {
-            return { x: cellX, y: cellY };
-        }
-    
-        return null;
-    }
-
     
     startGame() {
         try {
-            // Если есть сохраненная игра, продолжаем, иначе начинаем заново
             if (this.grid && this.grid.length > 0 && this.currentLevel > 0) {
                 this.showScreen('game');
                 this.render();
@@ -512,7 +390,6 @@ class LoveNumberPuzzle {
             this.gameState = 'playing';
             this.messageCount = 0;
             
-            // Создаем новую сетку только если нет сохраненной
             if (!this.grid || this.grid.length === 0) {
                 this.grid = [];
                 for (let x = 0; x < this.GRID_W; x++) {
@@ -562,6 +439,13 @@ class LoveNumberPuzzle {
                         cell.classList.add('merged');
                     }
                     
+                    // ПРОСТАЯ ОБРАБОТКА КАСАНИЙ - РАБОЧИЙ ВАРИАНТ
+                    cell.addEventListener('mousedown', (e) => this.handleCellStart(e, x, y));
+                    cell.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        this.handleCellStart(e, x, y);
+                    }, { passive: false });
+                    
                     const inner = document.createElement('div');
                     inner.className = 'cell-inner';
                     inner.textContent = this.formatNumber(this.grid[x][y].number);
@@ -571,11 +455,34 @@ class LoveNumberPuzzle {
                 }
             }
             
+            // ГЛОБАЛЬНЫЕ ОБРАБОТЧИКИ ДЛЯ ПЕРЕТАСКИВАНИЯ
+            this.setupGlobalHandlers();
+            
             this.updateXPBar();
             
         } catch (error) {
             console.error("Ошибка рендеринга:", error);
         }
+    }
+
+    setupGlobalHandlers() {
+        // Удаляем старые обработчики если есть
+        if (this.boundHandleMove) {
+            document.removeEventListener('mousemove', this.boundHandleMove);
+            document.removeEventListener('touchmove', this.boundHandleMove);
+            document.removeEventListener('mouseup', this.boundHandleEnd);
+            document.removeEventListener('touchend', this.boundHandleEnd);
+        }
+        
+        // Создаем новые привязанные обработчики
+        this.boundHandleMove = (e) => this.handleMove(e);
+        this.boundHandleEnd = () => this.handleEnd();
+        
+        // Добавляем обработчики
+        document.addEventListener('mousemove', this.boundHandleMove);
+        document.addEventListener('touchmove', this.boundHandleMove, { passive: false });
+        document.addEventListener('mouseup', this.boundHandleEnd);
+        document.addEventListener('touchend', this.boundHandleEnd);
     }
     
     handleCellStart(e, x, y) {
@@ -644,6 +551,24 @@ class LoveNumberPuzzle {
             }
         } catch (error) {
             console.error("Ошибка обработки наведения на ячейку:", error);
+        }
+    }
+    
+    handleEnd() {
+        if (!this.isDragging) return;
+        
+        try {
+            if (this.selected.length >= 2) {
+                this.mergeChain();
+            } else {
+                this.selected = [];
+                this.chainNumbers = [];
+                this.render();
+            }
+            
+            this.isDragging = false;
+        } catch (error) {
+            console.error("Ошибка обработки завершения выбора:", error);
         }
     }
     
@@ -844,7 +769,6 @@ class LoveNumberPuzzle {
                 this.showLoveMessage("Поле перемішано з любов'ю! 💫");
                 this.updateBonusButtons();
                 
-                // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
                 this.saveGameProgress();
                 return;
             }
@@ -895,7 +819,6 @@ class LoveNumberPuzzle {
             this.updateInfo();
             this.showLoveMessage("Клітинку розбито з любов'ю! 💖");
             
-            // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
             this.saveGameProgress();
         } catch (error) {
             console.error("Ошибка использования бонуса разрушения:", error);
@@ -922,7 +845,6 @@ class LoveNumberPuzzle {
             this.updateInfo();
             this.showLoveMessage("Вибух кохання! 💥❤️");
             
-            // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
             this.saveGameProgress();
         } catch (error) {
             console.error("Ошибка использования бонуса взрыва:", error);
@@ -931,25 +853,13 @@ class LoveNumberPuzzle {
     
     updateBonusButtons() {
         try {
-            const bonuses = ['destroy', 'shuffle', 'explosion'];
-            
+            const bonuses = ['destroy','shuffle','explosion'];
             bonuses.forEach(bonus => {
                 const btn = document.getElementById(`bonus-${bonus}`);
                 if (!btn) return;
-                
                 const cost = this.bonusCosts[bonus];
-                
-                if (this.activeBonus === bonus) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-                
-                if (this.xp < cost && this.activeBonus !== bonus) {
-                    btn.disabled = true;
-                } else {
-                    btn.disabled = false;
-                }
+                if (this.activeBonus === bonus) btn.classList.add('active'); else btn.classList.remove('active');
+                if (this.xp < cost && this.activeBonus !== bonus) btn.disabled = true; else btn.disabled = false;
             });
         } catch (error) {
             console.error("Ошибка обновления кнопок бонусов:", error);
@@ -960,30 +870,40 @@ class LoveNumberPuzzle {
         try {
             const sel = document.getElementById('level-select');
             if (!sel) return;
-            
             sel.innerHTML = "";
-            
             for (let i = 0; i < this.levels.length; i++) {
                 const btn = document.createElement('button');
                 btn.className = "level-btn";
                 btn.textContent = i + 1;
-                
-                if (i === this.currentLevel) {
-                    btn.classList.add("selected");
-                }
-                
+                if (i === this.currentLevel) btn.classList.add("selected");
                 btn.addEventListener('click', () => {
                     this.currentLevel = i;
                     this.initGame(i);
-                    
-                    // СОХРАНЕНИЕ ПРИ СМЕНЕ УРОВНЯ
                     this.saveGameProgress();
                 });
-                
                 sel.appendChild(btn);
             }
         } catch (error) {
             console.error("Ошибка показа выбора уровня:", error);
+        }
+    }
+    
+    checkWin() {
+        try {
+            const level = this.levels[this.currentLevel];
+            for (let x = 0; x < this.GRID_W; x++) for (let y = 0; y < this.GRID_H; y++) {
+                if (this.grid[x][y].number === level.target) {
+                    this.gameState = 'win';
+                    this.showLoveMessage(`Вітаю! Ти досягла цілі ${this.formatNumber(level.target)}! 🎉❤️`);
+                    this.autoNextLevel();
+                    return;
+                }
+            }
+            if (this.xp >= this.xpToNext) {
+                this.showLoveMessage("Ти готова до нового рівня кохання! 💖");
+            }
+        } catch (error) {
+            console.error("Ошибка проверки победы:", error);
         }
     }
     
@@ -995,41 +915,14 @@ class LoveNumberPuzzle {
                     setTimeout(() => {
                         this.initGame(this.currentLevel + 1);
                         this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові можливості! 🚀`);
-                        
-                        // СОХРАНЕНИЕ ПРИ ПЕРЕХОДЕ НА НОВЫЙ УРОВЕНЬ
                         this.saveGameProgress();
                     }, 3000);
                 }, 2000);
             } else {
-                setTimeout(() => {
-                    this.showVictoryScreen();
-                }, 2000);
+                setTimeout(() => { this.showVictoryScreen(); }, 2000);
             }
         } catch (error) {
             console.error("Ошибка автоматического перехода на следующий уровень:", error);
-        }
-    }
-    
-    checkWin() {
-        try {
-            const level = this.levels[this.currentLevel];
-            
-            for (let x = 0; x < this.GRID_W; x++) {
-                for (let y = 0; y < this.GRID_H; y++) {
-                    if (this.grid[x][y].number === level.target) {
-                        this.gameState = 'win';
-                        this.showLoveMessage(`Вітаю! Ти досягла цілі ${this.formatNumber(level.target)}! 🎉❤️`);
-                        this.autoNextLevel();
-                        return;
-                    }
-                }
-            }
-            
-            if (this.xp >= this.xpToNext) {
-                this.showLoveMessage("Ти готова до нового рівня кохання! 💖");
-            }
-        } catch (error) {
-            console.error("Ошибка проверки победы:", error);
         }
     }
     
@@ -1039,15 +932,9 @@ class LoveNumberPuzzle {
                 if (this.xp >= this.xpToNext) {
                     this.initGame(this.currentLevel + 1);
                     this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові виклики! 🌟`);
-                    
-                    // СОХРАНЕНИЕ ПРИ ПЕРЕХОДЕ НА НОВЫЙ УРОВЕНЬ
                     this.saveGameProgress();
-                } else {
-                    this.showLoveMessage(`Потрібно ${this.xpToNext} очків кохання! ❤️`);
-                }
-            } else {
-                this.showVictoryScreen();
-            }
+                } else this.showLoveMessage(`Потрібно ${this.xpToNext} очків кохання! ❤️`);
+            } else this.showVictoryScreen();
         } catch (error) {
             console.error("Ошибка перехода на следующий уровень:", error);
         }
@@ -1056,8 +943,6 @@ class LoveNumberPuzzle {
     resetGame() {
         try {
             this.initGame(this.currentLevel);
-            
-            // СОХРАНЕНИЕ ПОСЛЕ СБРОСА ИГРЫ
             this.saveGameProgress();
         } catch (error) {
             console.error("Ошибка сброса игры:", error);
@@ -1078,41 +963,22 @@ class LoveNumberPuzzle {
     generateLevels(count) {
         const levels = [];
         let target = 64;
-        let baseNumbers = [2, 4, 8];
-        
-        for (let i = 0; i < count; i++) {
-            const level = {
-                numbers: [...baseNumbers],
-                target: target,
-                newNumbers: this.generateNewNumbers(target),
-                max: baseNumbers[baseNumbers.length - 1],
-                xpToNext: 10 + Math.floor(i * 2.5)
-            };
-            
+        let baseNumbers = [2,4,8];
+        for (let i=0;i<count;i++){
+            const level = { numbers: [...baseNumbers], target: target, newNumbers: this.generateNewNumbers(target), max: baseNumbers[baseNumbers.length-1], xpToNext: 10 + Math.floor(i * 2.5) };
             levels.push(level);
-            
             target *= 2;
-            
-            if (i % 3 === 2 && baseNumbers.length < 5) {
-                baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
-            }
-            
-            if (i >= 15 && baseNumbers.length < 6) {
-                baseNumbers.push(baseNumbers[baseNumbers.length - 1] * 2);
-            }
+            if (i % 3 === 2 && baseNumbers.length < 5) baseNumbers.push(baseNumbers[baseNumbers.length-1]*2);
+            if (i >= 15 && baseNumbers.length < 6) baseNumbers.push(baseNumbers[baseNumbers.length-1]*2);
         }
-        
         return levels;
     }
     
     generateNewNumbers(target) {
         const newNumbers = [];
         let num = target / 8;
-        for (let i = 0; i < 8; i++) {
-            if (num <= target) {
-                newNumbers.push(num);
-                num *= 2;
-            }
+        for (let i=0;i<8;i++){
+            if (num <= target) { newNumbers.push(num); num *= 2; }
         }
         return newNumbers;
     }
