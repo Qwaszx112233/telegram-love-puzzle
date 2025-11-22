@@ -76,6 +76,13 @@ class LoveNumberPuzzle {
         this.createFloatingHearts();
         this.initializeEventListeners();
         this.showScreen('mainMenu');
+        this.setupThemeHandling();
+        
+        this.initializeEventListeners();
+        this.showScreen('mainMenu');
+
+        // Добавляем обработку темной темы
+        this.setupThemeHandling();
         
         // Загружаем сохраненный прогресс
         this.loadGameProgress().then(() => {
@@ -109,6 +116,25 @@ class LoveNumberPuzzle {
         // Сохранение при закрытии страницы
         window.addEventListener('beforeunload', () => {
             this.saveGameProgress();
+        });
+    }
+    
+     setupThemeHandling() {
+        // Проверяем предпочтения пользователя
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Применяем тему соответственно
+        if (prefersDark) {
+            document.body.classList.add('dark-theme');
+        }
+        
+        // Слушаем изменения темы
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (e.matches) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
         });
     }
     

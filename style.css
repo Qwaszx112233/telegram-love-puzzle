@@ -811,3 +811,230 @@ body {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.7; }
 }
+
+/* Dark Theme Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #ff6b9d;
+    --secondary-color: #ff8ab4;
+    --accent-color: #d94a7e;
+    --bg-color: #1a0f14;
+    --text-color: #ffffff;
+    --white: #2d1b25;
+    --shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+    --cell-color: #2d1b25;
+  }
+
+  body {
+    background: linear-gradient(135deg, #1a0f14 0%, #2d1b25 100%);
+  }
+
+  .menu-btn.secondary {
+    background: var(--white);
+    color: var(--primary-color);
+    border: 3px solid var(--accent-color);
+  }
+
+  .feature-item {
+    background: var(--white);
+    color: var(--text-color);
+  }
+
+  .love-message {
+    background: var(--white);
+    border: 2px solid var(--accent-color);
+  }
+
+  .stat-item {
+    background: var(--white);
+    color: var(--text-color);
+  }
+
+  .xp-bar {
+    background: #2d1b25;
+    border: 2px solid var(--accent-color);
+  }
+
+  .bonus-btn {
+    background: var(--cell-color);
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .bonus-btn:disabled {
+    background: #3a2a32;
+    color: #888;
+    border-color: #3a2a32;
+  }
+
+  .level-btn {
+    background: var(--cell-color);
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .grid {
+    background: var(--white);
+  }
+
+  .cell {
+    background: var(--cell-color);
+    box-shadow: 0 1px 3px rgba(255, 107, 157, 0.2);
+  }
+
+  .cell-inner {
+    color: var(--text-color);
+  }
+
+  .btn.back-btn {
+    background: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .save-controls .btn {
+    background: var(--white);
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .save-controls .btn:active {
+    background: #3a2a32;
+  }
+
+  .controls {
+    background: rgba(45, 27, 37, 0.95);
+    border: 2px solid var(--accent-color);
+  }
+
+  .setting-item {
+    background: var(--white);
+  }
+
+  .setting-control {
+    background: var(--white);
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .victory-overlay {
+    background: rgba(26, 15, 20, 0.95);
+  }
+
+  .victory-content {
+    background: var(--white);
+  }
+
+  .floating-heart {
+    opacity: 0.15;
+  }
+
+  /* Улучшение контрастности для текста */
+  .message-text,
+  .victory-message,
+  .romantic-subtitle,
+  .settings-title,
+  .setting-label {
+    color: var(--text-color);
+  }
+
+  /* Улучшение видимости выбранных ячеек */
+  .cell.selected .cell-inner {
+    background: var(--secondary-color);
+    color: #1a0f14;
+    font-weight: bold;
+  }
+
+  .cell.merged .cell-inner {
+    background: var(--primary-color);
+    color: #1a0f14;
+    font-weight: bold;
+  }
+}
+
+/* Дополнительные улучшения для темной темы */
+@media (prefers-color-scheme: dark) {
+  .home-btn {
+    background: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--accent-color);
+  }
+
+  .swipe-hint {
+    color: var(--secondary-color);
+  }
+
+  /* Улучшение видимости прогресс-бара */
+  .xp-bar-inner {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  }
+
+  .xp-bar-text {
+    color: #1a0f14;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+
+  /* Улучшение бонусных кнопок */
+  .bonus-cost {
+    color: var(--secondary-color);
+    font-weight: bold;
+  }
+
+  .bonus-btn.active {
+    background: var(--primary-color);
+    color: #1a0f14;
+    font-weight: bold;
+  }
+}
+
+/* Ручное переключение темы (дополнительная опция) */
+.theme-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+}
+
+/* Альтернативный вариант - добавление класса для ручного управления */
+body.dark-theme {
+  --primary-color: #ff6b9d;
+  --secondary-color: #ff8ab4;
+  --accent-color: #d94a7e;
+  --bg-color: #1a0f14;
+  --text-color: #ffffff;
+  --white: #2d1b25;
+  --shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+  --cell-color: #2d1b25;
+}
+
+body.dark-theme {
+  background: linear-gradient(135deg, #1a0f14 0%, #2d1b25 100%);
+}
+
+/* Применяем все стили темной темы и для класса .dark-theme */
+body.dark-theme .menu-btn.secondary,
+body.dark-theme .feature-item,
+body.dark-theme .love-message,
+body.dark-theme .stat-item,
+body.dark-theme .bonus-btn,
+body.dark-theme .level-btn,
+body.dark-theme .grid,
+body.dark-theme .cell,
+body.dark-theme .btn.back-btn,
+body.dark-theme .save-controls .btn,
+body.dark-theme .controls,
+body.dark-theme .setting-item,
+body.dark-theme .victory-content,
+body.dark-theme .home-btn {
+  /* Стили наследуются из медиа-запроса выше */
+}
