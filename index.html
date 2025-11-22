@@ -6,10 +6,92 @@
   <title>💖 Love Number Puzzle - Для моєї коханої 💖</title> 
   <link rel="stylesheet" href="style.css"> 
   <script src="https://telegram.org/js/telegram-web-app.js?2"></script> 
+  <style> 
+    /* Дополнительные романтические стили */ 
+    .romantic-particle { 
+      position: fixed; 
+      pointer-events: none; 
+      font-size: 1.5rem; 
+      z-index: 1000; 
+      animation: romanticFloat 3s ease-in-out forwards; 
+    } 
+    @keyframes romanticFloat { 
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; } 
+      100% { transform: translateY(-100px) rotate(360deg) scale(0.5); opacity: 0; } 
+    } 
+    .romantic-subtitle { 
+      font-size: 1.2rem; 
+      color: #e91e63; 
+      margin-bottom: 2rem; 
+      text-align: center; 
+      font-weight: bold; 
+    } 
+    .swipe-hint { 
+      text-align: center; 
+      color: #e91e63; 
+      font-weight: bold; 
+      margin: 10px 0; 
+      font-size: 0.9rem; 
+    } 
+    .touch-glow { 
+      position: fixed; 
+      width: 80px; 
+      height: 80px; 
+      background: radial-gradient(circle, rgba(255,107,107,0.6) 0%, rgba(255,107,107,0) 70%); 
+      border-radius: 50%; 
+      pointer-events: none; 
+      z-index: 999; 
+      animation: touchPulse 0.6s ease-out forwards; 
+      transform: translate(-50%, -50%); 
+    } 
+    @keyframes touchPulse { 
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; } 
+      100% { transform: translate(-50%, -50%) scale(2); opacity: 0; } 
+    } 
+    /* Улучшенные стили для романтики */ 
+    body { 
+      background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%) !important; 
+      font-family: 'Arial', sans-serif; 
+      margin: 0;
+      -webkit-tap-highlight-color: transparent;
+    } 
+    .game-title { 
+      background: linear-gradient(45deg, #e91e63, #ff4081); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      background-clip: text; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+    } 
+    .cell { 
+      transition: all 0.3s ease; 
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.2); 
+    } 
+    .cell.selected { 
+      transform: scale(0.9); 
+      box-shadow: 0 0 15px rgba(255, 64, 129, 0.6); 
+      z-index: 10; 
+    }
+    /* Стили для Pointer Events */
+    .grid {
+      touch-action: none;
+      -ms-touch-action: none;
+      user-select: none;
+    }
+    .cell {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    /* Стиль для кнопки сохранения */
+    .save-btn {
+      background: linear-gradient(45deg, #4CAF50, #45a049) !important;
+    }
+  </style> 
 </head> 
 <body> 
   <!-- Enhanced Floating Hearts Background --> 
   <div class="floating-hearts" id="floatingHearts"></div> 
+  <!-- Romantic Particles Container --> 
+  <div id="romanticParticles"></div> 
 
   <!-- Victory Overlay --> 
   <div class="victory-overlay hidden" id="victoryOverlay"> 
@@ -33,10 +115,10 @@
       <button class="menu-btn secondary" id="aboutBtn">🌹 Про наше кохання</button> 
     </div> 
     <div class="menu-features"> 
-      <div class="feature-item">💖 Я тебе</div> 
-      <div class="feature-item">кохаю</div> 
-      <div class="feature-item">більше</div> 
-      <div class="feature-item">за все 💖</div> 
+      <div class="feature-item">💖 Авто-збереження</div> 
+      <div class="feature-item">💝 30 рівнів</div> 
+      <div class="feature-item">🌟 Любовні фрази</div> 
+      <div class="feature-item">🎮 Для телеграм 💖</div> 
     </div> 
   </div> 
 
@@ -81,7 +163,7 @@
 
       <div class="controls"> 
         <button class="btn back-btn" id="backBtn">← До коханої</button> 
-        <button class="btn" id="saveBtn">💾 Зберегти</button> 
+        <button class="btn save-btn" id="saveBtn">💾 Зберегти</button> 
         <button class="btn" id="resetBtn">🔄 Почати знову</button> 
         <button class="btn" id="nextLevelBtn">⭐ Далі до щастя</button> 
       </div> 
@@ -116,7 +198,7 @@
       </div> 
     </div> 
     <div class="menu-buttons" style="margin-top: 20px;"> 
-      <button class="menu-btn" id="saveSettingsBtn">💾 Зберегти</button> 
+      <button class="menu-btn" id="saveSettingsBtn">💾 Зберегти налаштування</button> 
       <button class="menu-btn secondary" id="backFromSettingsBtn">← Назад</button> 
     </div> 
   </div> 
@@ -136,6 +218,7 @@
           • 30 рівнів = 30 причин тебе кохати<br> 
           • 40+ любовних фраз з мого серця<br> 
           • Безмежна любов у кожному дотику<br> 
+          • Автоматичне збереження прогресу<br> 
         </p> 
         <p style="margin: 8px 0; line-height: 1.3; font-size: clamp(0.8rem, 3vw, 0.9rem);"> 
           Ти - моє щастя, моя любов, моє все! 💖<br> 
