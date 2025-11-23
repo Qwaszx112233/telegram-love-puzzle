@@ -453,6 +453,12 @@ class LoveNumberPuzzle {
                 this.maxNumber = loadedData.maxNumber || 8;
                 this.gameState = loadedData.gameState || 'playing';
                 
+                // Після всіх відновлень даних — обов’язково оновлюємо лічильник на екрані!
+                const messageCounterEl = document.getElementById('messageCount');
+                if (messageCounterEl) {
+                    messageCounterEl.textContent = this.messageCount;
+                }
+
                 // Обновляем интерфейс
                 this.updateInfo();
                 this.updateBonusButtons();
