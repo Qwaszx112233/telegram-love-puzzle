@@ -355,17 +355,18 @@ class LoveNumberPuzzle {
             });
         
             document.getElementById('levelSelectBtn').addEventListener('click', () => {
+                console.log("Кнопка 'Обрати рівень' нажата");
                 this.showLevelSelectScreen();
+            });
+            
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                this.showScreen('settings');
             });
             
             document.getElementById('backFromLevelSelectBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
 
-            document.getElementById('settingsBtn').addEventListener('click', () => {
-                this.showScreen('settings');
-            });
-        
             document.getElementById('aboutBtn').addEventListener('click', () => {
                 this.showScreen('about');
             });
