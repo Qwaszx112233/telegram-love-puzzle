@@ -826,9 +826,26 @@ class LoveNumberPuzzle {
     }
     
     isValidResultNumber(num) {
-        const level = this.levels[this.currentLevel];
-        return level.numbers.includes(num) || level.newNumbers.includes(num);
-    }
+    const level = this.levels[this.currentLevel];
+    
+    // Разрешаем ВСЕ числа, которые могут быть получены в игре:
+    // 1. Все базовые числа уровня
+    // 2. Все числа из newNumbers уровня  
+    // 3. Любые числа, которые являются степенью двойки И меньше или равны целевого числа
+    
+    const isInLevelNumbers = level.numbers.includes(num);
+    const isInNewNumbers = level.newNumbers.includes(num);
+    
+    // Проверяем, является ли число степенью двойки и не превышает цель уровня
+    const isPowerOfTwo = (num & (num - 1)) === 0 && num !== 0;
+    const isWithinLevelRange = num <= level.target * 2; // Разрешаем немного больше цели
+    
+    // Разрешаем число если:
+    // - Оно есть в разрешенных числах уровня ИЛИ
+    // - Это степень двойки в пределах уровня ИЛИ  
+    // - Оно есть в новых числах уровня
+    return isInLevelNumbers || isInNewNumbers || (isPowerOfTwo && isWithinLevelRange);
+}
     
     getRandomInitialNumber() {
         const level = this.levels[this.currentLevel];
