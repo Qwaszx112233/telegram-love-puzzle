@@ -49,7 +49,63 @@ class LoveNumberPuzzle {
             "Люблю тебе більше, ніж слова можуть передати 💌",
             "Ти - мій щасливий квиток у житті 🎫",
             "З тобою кожен день - свято 🎉",
-            "Ти - відповідь на всі мої молитви 🙏"
+            "Ти - відповідь на всі мої молитви 🙏",
+            "Твоє кохання - моя найцінніша річ у житті 💎",
+            "Кожен день з тобою - це подарунок від всесвіту 🎁",
+            "Ти робиш моє серце щасливим кожну секунду 💓",
+            "Наша любов як вічність - без початку і кінця ♾️",
+            "Ти - моя мрія, яка стала реальністю 🌠",
+            "З тобою я можу будь-що, навіть злітати до зірок 🚀",
+            "Твоя посмішка - це сонячне проміння в моєму житті ☀️",
+            "Кохання до тебе з кожним днем стає сильнішим і ніжнішим 💖",
+            "Ти - моя тиха гавань у бурхливому морі життя ⚓",
+            "Кожна мить з тобою - це маленьке диво ✨",
+            "Твої руки - найбезпечніше місце на землі 👐",
+            "Ти навчив мене, що таке справжнє кохання 📚",
+            "Наше кохання - найкраща історія, яку я коли-небудь читав 📖",
+            "Ти - мій ангел-охоронець 😇",
+            "З тобою навіть дощові дні яскраві 🌧️🌈",
+            "Твоє серце б'ється в униз з моїм 💞",
+            "Ти - моє найщасливіше зараз 🥰",
+            "Кохання до тебе - це музика мого серця 🎵",
+            "Ти - крапля роси на квітці мого життя 🌸",
+            "З тобою я знайшов свій дім 🏡",
+            "Твоя любов - це енергія, що живить мене ⚡",
+            "Ти - найкращий сценарій мого життя 🎬",
+            "Наше кохання - це танець двох душ 💃🕺",
+            "Ти - північний зірка мого життя 🌟",
+            "З тобою кожен момент - це справжнє щастя 😌",
+            "Твоя любов - це сад, де ростуть мої мрії 🌷",
+            "Ти - відображення всіх моїх найкращих якостей 👑",
+            "Наше кохання - це вогонь, що ніколи не згасає 🔥",
+            "Ти - найніжніша мелодія мого серця 🎶",
+            "З тобою я відчуваю, що все можливо 💫",
+            "Твоя любов - це компас, що веде мене до щастя 🧭",
+            "Ти - краще за всі зірки на небі 🌌",
+            "Наше кохання - це безмежний океан почуттів 🌊",
+            "Ти - ключ до мого щастя 🔑",
+            "З тобою я відчуваю, що знайшов свою другу половинку 🧩",
+            "Твоя любов - це сонце, що освітлює мій шлях ☀️",
+            "Ти - найцінніший скарб моєї душі 🏆",
+            "Наше кохання - це вічний танець двох сердець 💖",
+            "Ти - найкрасивіша казка мого життя 📚",
+            "З тобою я відчуваю, що життя прекрасне 🌺",
+            "Твоя любов - це крила, що піднімають мене до небес 🕊️",
+            "Ти - найсвітліша зірка в моєму всесвіті 🌠",
+            "Наше кохання - це мелодія, що звучить вічно 🎼",
+            "Ти - найніжніший дотик моєї душі 👆",
+            "З тобою я відчуваю, що все має сенс 💭",
+            "Твоя любов - це еліксир життя 🧪",
+            "Ти - найтепліше проміння в моєму житті 🔆",
+            "Наше кохання - це бездонний океан ніжності 🌊",
+            "Ти - найкращий подарунок долі 🎁",
+            "З тобою я відчуваю, що знайшов свій шлях 🛣️",
+            "Твоя любов - це джерело моєї сили 💪",
+            "Ти - найчарівніша казка моєї реальносты 🧚",
+            "Наше кохання - це вічне полум'я пристрасті 🔥",
+            "Ти - найніжніша мрія, яка стала явью 🌙",
+            "З тобою я відчуваю, що все можливо ✨",
+            "Твоя любов - це найкрасивіша пісня мого серця 🎤"
         ];
         
         this.GRID_W = 5;
@@ -202,12 +258,19 @@ class LoveNumberPuzzle {
         });
     }
     
+
     async saveGameProgress() {
-        if (this.isSaving) return;
+        if (this.isSaving) {
+            console.log('🔄 Уже сохраняем, пропускаем...');
+            return;
+        }
         
         this.isSaving = true;
+        const saveId = Date.now();
         
         try {
+            console.log(`💾 Начинаем сохранение #${saveId}...`);
+            
             const gameState = {
                 currentLevel: this.currentLevel,
                 xp: this.xp,
@@ -218,231 +281,281 @@ class LoveNumberPuzzle {
                 activeBonus: this.activeBonus,
                 gameState: this.gameState,
                 timestamp: Date.now(),
-                version: '1.0'
+                version: '2.0',
+                saveId: saveId
             };
             
-            // Сохраняем в localStorage
-            localStorage.setItem('lovePuzzleSave_' + this.userId, JSON.stringify(gameState));
-            localStorage.setItem('lovePuzzleUserId', this.userId);
+            // 🔄 МНОГОУРОВНЕВОЕ СОХРАНЕНИЕ
             
-            console.log('Прогресс сохранен:', {
+            // 1. Основное сохранение
+            const mainSave = JSON.stringify(gameState);
+            localStorage.setItem('lovePuzzle_main', mainSave);
+            console.log('✅ Основное сохранение завершено');
+            
+            // 2. Резервная копия 1 (немедленно)
+            localStorage.setItem('lovePuzzle_backup1', mainSave);
+            
+            // 3. Резервная копия 2 (через 100мс)
+            setTimeout(() => {
+                localStorage.setItem('lovePuzzle_backup2', mainSave);
+                console.log('✅ Резервная копия 2 создана');
+            }, 100);
+            
+            // 4. Резервная копия 3 (в другом формате)
+            const compactSave = JSON.stringify({
                 level: this.currentLevel,
                 xp: this.xp,
-                messages: this.messageCount
+                messages: this.messageCount,
+                t: Date.now()
             });
+            localStorage.setItem('lovePuzzle_compact', compactSave);
+            
+            // 5. Сохранение в SessionStorage как дополнительная защита
+            sessionStorage.setItem('lovePuzzle_session', mainSave);
+            
+            console.log('💾 Прогресс сохранен:', {
+                level: this.currentLevel,
+                xp: this.xp,
+                messages: this.messageCount,
+                saveId: saveId
+            });
+            
+            // Показываем подтверждение (только раз в 10 секунд)
+            const now = Date.now();
+            if (!this.lastSaveNotify || now - this.lastSaveNotify > 10000) {
+                this.showLoveMessage("Прогрес збережено! 💾");
+                this.lastSaveNotify = now;
+            }
+            
         } catch (error) {
-            console.error('Ошибка сохранения:', error);
+            console.error('❌ Критическая ошибка сохранения:', error);
+            
+            // Попытка экстренного сохранения минимальных данных
+            try {
+                const emergencySave = JSON.stringify({
+                    level: this.currentLevel,
+                    xp: this.xp,
+                    messages: this.messageCount,
+                    emergency: true,
+                    timestamp: Date.now()
+                });
+                localStorage.setItem('lovePuzzle_emergency', emergencySave);
+                console.log('🚨 Экстренное сохранение выполнено');
+            } catch (e) {
+                console.error('💥 Даже экстренное сохранение не удалось:', e);
+            }
         } finally {
             this.isSaving = false;
         }
     }
-    
+
     async loadGameProgress() {
         try {
-            const saved = localStorage.getItem('lovePuzzleSave_' + this.userId);
-            if (saved) {
-                const savedData = JSON.parse(saved);
-                
-                if (this.isValidSaveData(savedData)) {
-                    // Восстанавливаем состояние игры
-                    this.currentLevel = savedData.currentLevel || 0;
-                    this.xp = savedData.xp || 0;
-                    this.messageCount = savedData.messageCount || 0;
-                    this.grid = savedData.grid || [];
-                    this.maxNumber = savedData.maxNumber || 8;
-                    this.gameState = savedData.gameState || 'playing';
-                    
-                    // Обновляем интерфейс
-                    this.updateInfo();
-                    this.updateBonusButtons();
-                    
-                    console.log('Прогресс загружен:', {
-                        level: this.currentLevel,
-                        xp: this.xp,
-                        messages: this.messageCount
-                    });
-                    
-                    this.showLoveMessage("Прогресс загружен! Продолжаем игру! 💾");
-                    return true;
+            console.log('🔄 Загрузка прогресса...');
+            
+            // 🔍 ПОПЫТКИ ЗАГРУЗКИ В ПОРЯДКЕ ПРИОРИТЕТА
+            
+            let loadedData = null;
+            let source = '';
+            
+            // 1. Основное сохранение
+            try {
+                const saved = localStorage.getItem('lovePuzzle_main');
+                if (saved) {
+                    loadedData = JSON.parse(saved);
+                    source = 'main';
+                    console.log('✅ Загружено из основного сохранения');
+                }
+            } catch (e) {
+                console.log('❌ Ошибка загрузки основного сохранения:', e);
+            }
+            
+            // 2. Резервная копия 1 (если основное не загрузилось)
+            if (!loadedData) {
+                try {
+                    const saved = localStorage.getItem('lovePuzzle_backup1');
+                    if (saved) {
+                        loadedData = JSON.parse(saved);
+                        source = 'backup1';
+                        console.log('✅ Загружено из резервной копии 1');
+                    }
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки резервной копии 1:', e);
                 }
             }
-        } catch (error) {
-            console.error('Ошибка загрузки прогресса:', error);
-        }
-        
-        return false;
-    }
-    
-    isValidSaveData(data) {
-        return data && 
-               typeof data.currentLevel === 'number' && 
-               typeof data.xp === 'number' &&
-               Array.isArray(data.grid);
-    }
-    
-    resetSaveData() {
-        localStorage.removeItem('lovePuzzleSave_' + this.userId);
-        this.showLoveMessage("Дані скинуті! Починаємо з початку! 🔄");
-        this.initGame(0);
-    }
-
-    // Функция для сохранения прогресса в бота
-    async saveProgressToBot(level, score, phrasesFound) {
-        try {
-            console.log('🔄 Пытаемся сохранить прогресс в бота...');
-        
-            // Получаем данные из Telegram Web App
-            if (window.Telegram && window.Telegram.WebApp) {
-                const user = Telegram.WebApp.initDataUnsafe?.user;
             
-                if (user && user.id) {
-                    const progressData = {
-                        chat_id: user.id,
-                        username: user.username || '',
-                        first_name: user.first_name || '',
-                        level: level,
-                        score: score,
-                        phrases_found: phrasesFound
-                    };
-                
-                    console.log('📤 Отправляем прогресс боту:', progressData);
-                
-                    // Отправляем данные на сервер бота
-                    const response = await fetch(this.BOT_API_URL + '/api/save_progress', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(progressData)
-                    });
-                
-                    const data = await response.json();
-                    console.log('📥 Ответ от бота:', data);
-                
-                    if (data.status === 'success') {
-                        console.log('✅ Прогресс успешно сохранен в бота');
-                        return true;
-                    } else {
-                        console.log('❌ Ошибка сохранения в бота:', data.message);
-                        return false;
+            // 3. Резервная копия 2
+            if (!loadedData) {
+                try {
+                    const saved = localStorage.getItem('lovePuzzle_backup2');
+                    if (saved) {
+                        loadedData = JSON.parse(saved);
+                        source = 'backup2';
+                        console.log('✅ Загружено из резервной копии 2');
                     }
-                } else {
-                    console.log('ℹ️ Пользователь Telegram не найден');
-                    return false;
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки резервной копии 2:', e);
                 }
+            }
+            
+            // 4. Компактное сохранение
+            if (!loadedData) {
+                try {
+                    const saved = localStorage.getItem('lovePuzzle_compact');
+                    if (saved) {
+                        loadedData = JSON.parse(saved);
+                        // Восстанавливаем полную структуру из компактной
+                        loadedData = {
+                            currentLevel: loadedData.level,
+                            xp: loadedData.xp,
+                            messageCount: loadedData.messages,
+                            grid: [],
+                            maxNumber: 8,
+                            gameState: 'playing'
+                        };
+                        source = 'compact';
+                        console.log('✅ Загружено из компактного сохранения');
+                    }
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки компактного сохранения:', e);
+                }
+            }
+            
+            // 5. SessionStorage (последняя попытка)
+            if (!loadedData) {
+                try {
+                    const saved = sessionStorage.getItem('lovePuzzle_session');
+                    if (saved) {
+                        loadedData = JSON.parse(saved);
+                        source = 'session';
+                        console.log('✅ Загружено из sessionStorage');
+                    }
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки из sessionStorage:', e);
+                }
+            }
+            
+            // 6. Экстренное сохранение
+            if (!loadedData) {
+                try {
+                    const saved = localStorage.getItem('lovePuzzle_emergency');
+                    if (saved) {
+                        loadedData = JSON.parse(saved);
+                        source = 'emergency';
+                        console.log('🚨 Загружено из экстренного сохранения');
+                    }
+                } catch (e) {
+                    console.log('❌ Ошибка загрузки экстренного сохранения:', e);
+                }
+            }
+            
+            if (loadedData && this.isValidSaveData(loadedData)) {
+                // Восстанавливаем состояние игры
+                this.currentLevel = loadedData.currentLevel || 0;
+                this.xp = loadedData.xp || 0;
+                this.messageCount = loadedData.messageCount || 0;
+                this.grid = loadedData.grid || [];
+                this.maxNumber = loadedData.maxNumber || 8;
+                this.gameState = loadedData.gameState || 'playing';
+                
+                // Обновляем интерфейс
+                this.updateInfo();
+                this.updateBonusButtons();
+                
+                console.log('🎮 Прогресс загружен:', {
+                    level: this.currentLevel,
+                    xp: this.xp,
+                    messages: this.messageCount,
+                    source: source
+                });
+                
+                this.showLoveMessage(`Прогрес відновлено! (${source}) 💾`);
+                return true;
             } else {
-                console.log('ℹ️ Не в Telegram Web App, сохраняем только локально');
+                console.log('ℹ️ Сохранение не найдено или повреждено');
                 return false;
             }
+            
         } catch (error) {
-            console.error('❌ Ошибка сохранения прогресса в бота:', error);
+            console.error('❌ Общая ошибка загрузки прогресса:', error);
             return false;
         }
     }
 
-    // Функция для добавления найденной фразы в бота
-    async addPhraseToBot(phraseId) {
-        try {
-            console.log('💖 Пытаемся сохранить фразу в бота...');
+    async recoverSaveData() {
+        console.log('🛠️ Запуск восстановления данных...');
         
-            if (window.Telegram && window.Telegram.WebApp) {
-                const user = Telegram.WebApp.initDataUnsafe?.user;
-            
-                if (user && user.id) {
-                    const phraseData = {
-                        chat_id: user.id,
-                        phrase_id: phraseId
-                    };
-                
-                    console.log('📤 Отправляем фразу боту:', phraseData);
-                
-                    const response = await fetch(this.BOT_API_URL + '/api/add_phrase', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(phraseData)
-                    });
-                
-                    const data = await response.json();
-                    console.log('📥 Ответ от бота:', data);
-                
-                    if (data.status === 'success') {
-                        console.log('✅ Фраза успешно сохранена в бота');
-                        return true;
-                    } else {
-                        console.log('❌ Ошибка сохранения фразы в бота:', data.message);
-                        return false;
+        const saves = [
+            'lovePuzzle_main',
+            'lovePuzzle_backup1', 
+            'lovePuzzle_backup2',
+            'lovePuzzle_compact',
+            'lovePuzzle_emergency'
+        ];
+        
+        let recovered = false;
+        
+        for (const saveKey of saves) {
+            try {
+                const saved = localStorage.getItem(saveKey);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (this.isValidSaveData(data)) {
+                        console.log(`✅ Восстановлено из ${saveKey}`);
+                        await this.loadGameProgress();
+                        recovered = true;
+                        break;
                     }
                 }
+            } catch (e) {
+                console.log(`❌ Ошибка восстановления из ${saveKey}:`, e);
             }
-            return false;
+        }
+        
+        if (recovered) {
+            this.showLoveMessage("Дані відновлено! 🛠️");
+        } else {
+            this.showLoveMessage("Не вдалося відновити дані 😔");
+        }
+        
+        return recovered;
+    }
+
+    isValidSaveData(data) {
+        try {
+            // Базовые проверки
+            if (!data || typeof data !== 'object') return false;
+            
+            // Проверяем обязательные поля
+            if (typeof data.currentLevel !== 'number' || data.currentLevel < 0) return false;
+            if (typeof data.xp !== 'number' || data.xp < 0) return false;
+            if (typeof data.messageCount !== 'number' || data.messageCount < 0) return false;
+            
+            // Проверяем уровень (не больше максимального)
+            if (data.currentLevel >= this.levels.length) return false;
+            
+            // Проверяем сетку (если есть)
+            if (data.grid && !Array.isArray(data.grid)) return false;
+            
+            console.log('✅ Данные сохранения валидны');
+            return true;
+            
         } catch (error) {
-            console.error('❌ Ошибка добавления фразы в бота:', error);
+            console.error('❌ Ошибка валидации данных:', error);
             return false;
         }
     }
 
-    // ОБНОВЛЕННАЯ функция сохранения игры
-    async saveGameProgress() {
-        if (this.isSaving) return;
-        
-        this.isSaving = true;
-        
-        try {
-            const gameState = {
-                currentLevel: this.currentLevel,
-                xp: this.xp,
-                messageCount: this.messageCount,
-                grid: this.grid,
-                maxNumber: this.maxNumber,
-                selected: this.selected,
-                activeBonus: this.activeBonus,
-                gameState: this.gameState,
-                timestamp: Date.now(),
-                version: '1.0'
-            };
-            
-            // Сохраняем в localStorage
-            localStorage.setItem('lovePuzzleSave_' + this.userId, JSON.stringify(gameState));
-            localStorage.setItem('lovePuzzleUserId', this.userId);
-            
-            console.log('💾 Прогресс сохранен локально:', {
-                level: this.currentLevel,
-                xp: this.xp,
-                messages: this.messageCount
-            });
-            
-            // Сохраняем в бота (если в Telegram)
-            if (this.isTelegram) {
-                const success = await this.saveProgressToBot(
-                    this.currentLevel + 1, // уровень для бота (начинается с 1)
-                    this.xp,               // очки
-                    this.messageCount      // количество найденных фраз
-                );
-                
-                if (success) {
-                    this.showLoveMessage("Прогрес збережено в боті! 💾");
-                }
-            }
-            
-        } catch (error) {
-            console.error('❌ Ошибка сохранения:', error);
-        } finally {
-            this.isSaving = false;
-        }
-    }
-    
     // ==================== ОСНОВНЫЕ МЕТОДЫ ИГРЫ ====================
-    
+
     initTelegramApp() {
         try {
             this.tg.expand();
             this.tg.enableClosingConfirmation();
             this.applyTelegramTheme();
-            
+
             this.tg.onEvent('themeChanged', this.applyTelegramTheme.bind(this));
-            
+
             this.isTelegram = true;
             console.log("Telegram Web App успешно инициализирован");
         } catch (error) {
@@ -450,47 +563,47 @@ class LoveNumberPuzzle {
             this.isTelegram = false;
         }
     }
-    
+
     applyTelegramTheme() {
         try {
             const themeParams = this.tg.themeParams;
-            
+
             if (themeParams.bg_color) {
                 document.documentElement.style.setProperty('--bg-color', themeParams.bg_color);
                 document.body.style.background = themeParams.bg_color;
             }
-            
+
             if (themeParams.text_color) {
                 document.documentElement.style.setProperty('--text-color', themeParams.text_color);
             }
-            
+
             if (themeParams.button_color) {
                 document.documentElement.style.setProperty('--primary-color', themeParams.button_color);
                 document.documentElement.style.setProperty('--secondary-color', this.adjustColor(themeParams.button_color, 20));
             }
-            
+
             if (themeParams.button_text_color) {
                 document.documentElement.style.setProperty('--white', themeParams.button_text_color);
             }
-            
+
         } catch (error) {
             console.error("Ошибка применения темы Telegram:", error);
         }
     }
-    
+
     adjustColor(color, amount) {
         return '#' + color.replace(/^#/, '').replace(/../g, color => 
             ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)
         );
     }
-    
+
     createFloatingHearts() {
         const container = document.getElementById('floatingHearts');
         if (!container) return;
-        
+
         const heartCount = 12;
         container.innerHTML = '';
-        
+
         for (let i = 0; i < heartCount; i++) {
             const heart = document.createElement('div');
             heart.className = 'floating-heart';
@@ -502,13 +615,13 @@ class LoveNumberPuzzle {
             container.appendChild(heart);
         }
     }
-    
+
     showScreen(screenName) {
         try {
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.add('hidden');
             });
-            
+
             const targetScreen = document.getElementById(screenName + 'Screen');
             if (targetScreen) {
                 targetScreen.classList.remove('hidden');
@@ -517,12 +630,12 @@ class LoveNumberPuzzle {
             console.error("Ошибка показа экрана:", error);
         }
     }
-    
+
     showVictoryScreen() {
         try {
             const victoryOverlay = document.getElementById('victoryOverlay');
             const victoryMessage = document.getElementById('victoryMessage');
-            
+
             if (victoryOverlay && victoryMessage) {
                 victoryMessage.textContent = `Ти пройшла всі ${this.MAX_LEVEL} рівнів! Ти найкраща! 💝`;
                 victoryOverlay.classList.remove('hidden');
@@ -531,7 +644,7 @@ class LoveNumberPuzzle {
             console.error("Ошибка показа экрана победы:", error);
         }
     }
-    
+
     hideVictoryScreen() {
         try {
             const victoryOverlay = document.getElementById('victoryOverlay');
@@ -542,23 +655,23 @@ class LoveNumberPuzzle {
             console.error("Ошибка скрытия экрана победы:", error);
         }
     }
-    
+
     initializeEventListeners() {
         try {
              // Main menu buttons
             document.getElementById('playBtn').addEventListener('click', () => {
                 this.startGame();
             });
-        
+
             document.getElementById('levelSelectBtn').addEventListener('click', () => {
                 console.log("Кнопка 'Обрати рівень' нажата");
                 this.showLevelSelectScreen();
             });
-            
+
             document.getElementById('settingsBtn').addEventListener('click', () => {
                 this.showScreen('settings');
             });
-            
+
             document.getElementById('backFromLevelSelectBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
@@ -566,31 +679,31 @@ class LoveNumberPuzzle {
             document.getElementById('aboutBtn').addEventListener('click', () => {
                 this.showScreen('about');
             });
-        
+
             // Home button in game screen
             document.getElementById('homeBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+
             // Back buttons
             document.getElementById('backBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+
             document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+
             document.getElementById('backFromAboutBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+
             // Victory screen buttons
             document.getElementById('playAgainBtn').addEventListener('click', () => {
                 this.hideVictoryScreen();
                 this.startGame();
             });
-        
+
             document.getElementById('closeWebAppBtn').addEventListener('click', () => {
                 if (this.isTelegram) {
                     this.tg.close();
@@ -598,27 +711,27 @@ class LoveNumberPuzzle {
                     this.showScreen('mainMenu');
                 }
             });
-        
+
             // Settings
             document.getElementById('saveSettingsBtn').addEventListener('click', () => {
                 this.showScreen('mainMenu');
             });
-        
+
             // Game buttons
             document.getElementById('resetBtn').addEventListener('click', () => this.resetGame());
             document.getElementById('nextLevelBtn').addEventListener('click', () => this.nextLevel());
             document.getElementById('saveGameBtn').addEventListener('click', () => this.manualSave());
             document.getElementById('resetProgressBtn').addEventListener('click', () => this.resetProgress());
-        
+
             document.getElementById('bonus-destroy').addEventListener('click', () => this.activateBonus('destroy'));
             document.getElementById('bonus-shuffle').addEventListener('click', () => this.activateBonus('shuffle'));
             document.getElementById('bonus-explosion').addEventListener('click', () => this.activateBonus('explosion'));
-        
+
             document.addEventListener('contextmenu', e => e.preventDefault());
-        
+
             // ДОБАВЛЕНО: Инициализация обработки касаний для сетки (Pointer Events)
             this.initializeGridTouchHandling();
-        
+
         } catch (error) {
             console.error("Ошибка инициализации обработчиков событий:", error);
         }
@@ -688,7 +801,7 @@ class LoveNumberPuzzle {
         this.selected = [{x: cell.x, y: cell.y}];
         this.chainNumbers = [this.grid[cell.x][cell.y].number];
         this.render();
-        
+
     } catch (error) {
         console.error("Помилка handlePointerStart:", error);
     }
@@ -732,7 +845,7 @@ class LoveNumberPuzzle {
     getCellFromPoint(clientX, clientY) {
         const grid = document.getElementById('grid');
         if (!grid) return null;
-    
+
         const rect = grid.getBoundingClientRect();
 
         // Проверяем, что координаты внутри сетки
@@ -740,20 +853,20 @@ class LoveNumberPuzzle {
             clientY < rect.top || clientY > rect.bottom) {
             return null;
         }
-    
+
         const cellWidth = rect.width / this.GRID_W;
         const cellHeight = rect.height / this.GRID_H;
-    
+
         const gridX = clientX - rect.left;
         const gridY = clientY - rect.top;
-    
+
         const cellX = Math.floor(gridX / cellWidth);
         const cellY = Math.floor(gridY / cellHeight);
-    
+
         if (cellX >= 0 && cellX < this.GRID_W && cellY >= 0 && cellY < this.GRID_H) {
             return { x: cellX, y: cellY };
         }
-    
+
         return null;
     }
     // =========================================================================================
@@ -773,12 +886,12 @@ class LoveNumberPuzzle {
             console.error("Ошибка запуска игры:", error);
         }
     }
-    
+
     initGame(levelNum = 0) {
         try {
             this.currentLevel = levelNum;
             const level = this.levels[this.currentLevel];
-            
+
             this.xp = 0;
             this.xpToNext = level.xpToNext;
             this.maxNumber = level.max;
@@ -788,40 +901,40 @@ class LoveNumberPuzzle {
             this.activeBonus = null;
             this.gameState = 'playing';
             this.messageCount = 0;
-            
+
             // Создаем новую сетку только если нет сохраненной
             if (!this.grid || this.grid.length === 0) {
                 this.grid = [];
                 for (let x = 0; x < this.GRID_W; x++) {
                     this.grid[x] = [];
                     for (let y = 0; y < this.GRID_H; y++) {
-                        this.grid[x][y] = { 
+                        this.grid[x][y] = {
                             number: level.numbers[Math.floor(Math.random() * level.numbers.length)], 
-                            merged: false 
+                            merged: false
                         };
                     }
                 }
             }
-            
+
             document.getElementById('messageCount').textContent = this.messageCount;
-            
+
             this.render();
             this.updateInfo();
             this.showLoveMessage("Об'єднуй числа та отримуй любовні фрази! 💕");
             this.updateBonusButtons();
-            
+
         } catch (error) {
             console.error("Ошибка инициализации игры:", error);
         }
     }
-    
+
     render() {
         try {
             const gridDiv = document.getElementById('grid');
             if (!gridDiv) return;
-            
+
             gridDiv.innerHTML = '';
-            
+
             for (let y = 0; y < this.GRID_H; y++) {
                 for (let x = 0; x < this.GRID_W; x++) {
                     const cell = document.createElement('div');
@@ -829,31 +942,31 @@ class LoveNumberPuzzle {
                     cell.dataset.x = x;
                     cell.dataset.y = y;
                     cell.dataset.number = this.grid[x][y].number;
-                    
+
                     if (this.selected.some(sel => sel.x === x && sel.y === y)) {
                         cell.classList.add('selected');
                     }
-                    
+
                     if (this.grid[x][y].merged) {
                         cell.classList.add('merged');
                     }
-                    
+
                     const inner = document.createElement('div');
                     inner.className = 'cell-inner';
                     inner.textContent = this.formatNumber(this.grid[x][y].number);
                     cell.appendChild(inner);
-                    
+
                     gridDiv.appendChild(cell);
                 }
             }
-            
+
             this.updateXPBar();
-            
+
         } catch (error) {
             console.error("Ошибка рендеринга:", error);
         }
     }
-    
+
     handleCellStart(e, x, y) {
         try {
             e.preventDefault();
