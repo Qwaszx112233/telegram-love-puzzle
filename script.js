@@ -95,6 +95,21 @@ class LoveNumberPuzzle {
         document.addEventListener('dblclick', (e) => e.preventDefault());
     }
     
+    debugBonuses() {
+        console.log("=== ДЕБАГ БОНУСОВ ===");
+        console.log("Текущие очки XP:", this.xp);
+        console.log("Стоимость бонусов:", this.bonusCosts);
+        console.log("Активный бонус:", this.activeBonus);
+        console.log("Достаточно XP для разрушения:", this.xp >= this.bonusCosts.destroy);
+        console.log("Достаточно XP для взрыва:", this.xp >= this.bonusCosts.explosion);
+        console.log("Достаточно XP для перемешивания:", this.xp >= this.bonusCosts.shuffle);
+        
+        // Дополнительная информация о состоянии игры
+        console.log("Состояние игры:", this.gameState);
+        console.log("Выбранные клетки:", this.selected);
+        console.log("Режим перетаскивания:", this.isDragging);
+    }
+
     // ==================== СИСТЕМА СОХРАНЕНИЯ ====================
     
     getUserId() {
@@ -440,34 +455,39 @@ class LoveNumberPuzzle {
     }
 
     handlePointerStart(e) {
-        try {
-            if (this.gameState !== 'playing') return;
+    try {
+        if (this.gameState !== 'playing') return;
 
-            const clientX = (typeof e.clientX === 'number') ? e.clientX : (e.touches && e.touches[0] && e.touches[0].clientX);
-            const clientY = (typeof e.clientY === 'number') ? e.clientY : (e.touches && e.touches[0] && e.touches[0].clientY);
-            if (clientX == null || clientY == null) return;
+        const clientX = e.clientX;
+        const clientY = e.clientY;
+        if (clientX == null || clientY == null) return;
 
-            const cell = this.getCellFromPoint(clientX, clientY);
-            if (!cell) return;
+        const cell = this.getCellFromPoint(clientX, clientY);
+        if (!cell) return;
 
-            if (this.activeBonus === 'destroy') {
-                this.useDestroyBonus(cell.x, cell.y);
-                return;
-            }
+        console.log(`Клік на клітинку: ${cell.x},${cell.y}, активний бонус: ${this.activeBonus}`); // ДЛЯ ДЕБАГА
 
-            if (this.activeBonus === 'explosion') {
-                this.useExplosionBonus(cell.x, cell.y);
-                return;
-            }
-
-            this.isDragging = true;
-            this.selected = [{x: cell.x, y: cell.y}];
-            this.chainNumbers = [this.grid[cell.x][cell.y].number];
-            this.render();
-        } catch (error) {
-            console.error("Ошибка handlePointerStart:", error);
+        // ПРОВЕРЯЕМ АКТИВНЫЕ БОНУСЫ
+        if (this.activeBonus === 'destroy') {
+            this.useDestroyBonus(cell.x, cell.y);
+            return;
         }
+
+        if (this.activeBonus === 'explosion') {
+            this.useExplosionBonus(cell.x, cell.y);
+            return;
+        }
+
+        // Обычный игровой процесс
+        this.isDragging = true;
+        this.selected = [{x: cell.x, y: cell.y}];
+        this.chainNumbers = [this.grid[cell.x][cell.y].number];
+        this.render();
+        
+    } catch (error) {
+        console.error("Помилка handlePointerStart:", error);
     }
+}
 
     handlePointerMove(e) {
         try {
@@ -894,38 +914,54 @@ class LoveNumberPuzzle {
     }
     
     activateBonus(bonusType) {
-        try {
-            if (this.activeBonus === bonusType) {
-                this.activeBonus = null;
-                this.updateBonusButtons();
-                this.render();
-                return;
-            }
-            
-            if (this.xp < this.bonusCosts[bonusType]) {
-                this.showLoveMessage("Недостатньо очків кохання! ❤️‍🔥");
-                return;
-            }
-            
-            if (bonusType === 'shuffle') {
-                this.xp -= this.bonusCosts.shuffle;
-                this.shuffleGrid();
-                this.showLoveMessage("Поле перемішано з любов'ю! 💫");
-                this.updateBonusButtons();
-                
-                // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
-                this.saveGameProgress();
-                return;
-            }
-            
-            this.activeBonus = bonusType;
+    try {
+        console.log(`Активируем бонус: ${bonusType}`); // ДЛЯ ДЕБАГА
+        
+        // Если бонус уже активен - деактивируем
+        if (this.activeBonus === bonusType) {
+            this.activeBonus = null;
             this.updateBonusButtons();
             this.render();
-            this.showLoveMessage("Бонус активовано! 💫");
-        } catch (error) {
-            console.error("Ошибка активации бонуса:", error);
+            this.showLoveMessage("Бонус вимкнено 💫");
+            return;
         }
+        
+        // Проверяем достаточно ли XP
+        if (this.xp < this.bonusCosts[bonusType]) {
+            this.showLoveMessage(`Потрібно ${this.bonusCosts[bonusType]} очків кохання! ❤️‍🔥`);
+            return;
+        }
+        
+        // Если бонус "shuffle" - сразу используем
+        if (bonusType === 'shuffle') {
+            this.xp -= this.bonusCosts.shuffle;
+            this.shuffleGrid();
+            this.showLoveMessage("Поле перемішано з любов'ю! 💫");
+            this.updateBonusButtons();
+            this.saveGameProgress();
+            return;
+        }
+        
+        // Для других бонусов - активируем режим
+        this.activeBonus = bonusType;
+        this.updateBonusButtons();
+        this.render();
+        this.showLoveMessage(`Бонус "${this.getBonusName(bonusType)}" активовано! 💫`);
+        
+    } catch (error) {
+        console.error("Помилка активації бонуса:", error);
     }
+}
+
+// Добавьте эту вспомогательную функцию
+getBonusName(bonusType) {
+    const names = {
+        'destroy': 'Розбити',
+        'explosion': 'Вибух кохання', 
+        'shuffle': 'Перемішати'
+    };
+    return names[bonusType] || bonusType;
+}
     
     shuffleGrid() {
         try {
@@ -955,48 +991,70 @@ class LoveNumberPuzzle {
     }
     
     useDestroyBonus(x, y) {
-        try {
-            this.grid[x][y].number = this.getRandomInitialNumber();
-            this.xp -= this.bonusCosts.destroy;
+    try {
+        console.log(`Використовуємо бонус розбиття на ${x},${y}`); // ДЛЯ ДЕБАГА
+        
+        // Проверяем достаточно ли XP
+        if (this.xp < this.bonusCosts.destroy) {
+            this.showLoveMessage("Недостатньо очків для бонусу! ❤️‍🔥");
             this.activeBonus = null;
             this.updateBonusButtons();
-            this.render();
-            this.updateInfo();
-            this.showLoveMessage("Клітинку розбито з любов'ю! 💖");
-            
-            // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
-            this.saveGameProgress();
-        } catch (error) {
-            console.error("Ошибка использования бонуса разрушения:", error);
+            return;
         }
+        
+        this.grid[x][y].number = this.getRandomInitialNumber();
+        this.xp -= this.bonusCosts.destroy;
+        this.activeBonus = null;
+        this.updateBonusButtons();
+        this.render();
+        this.updateInfo();
+        this.showLoveMessage("Клітинку розбито з любов'ю! 💖");
+        
+        this.saveGameProgress();
+        
+    } catch (error) {
+        console.error("Помилка використання бонусу руйнування:", error);
     }
-    
-    useExplosionBonus(x, y) {
-        try {
-            for (let dx = -1; dx <= 1; dx++) {
-                for (let dy = -1; dy <= 1; dy++) {
-                    const nx = x + dx;
-                    const ny = y + dy;
-                    
-                    if (nx >= 0 && nx < this.GRID_W && ny >= 0 && ny < this.GRID_H) {
-                        this.grid[nx][ny].number = this.getRandomInitialNumber();
-                    }
+}
+
+useExplosionBonus(x, y) {
+    try {
+        console.log(`Використовуємо бонус вибуху на ${x},${y}`); // ДЛЯ ДЕБАГА
+        
+        // Проверяем достаточно ли XP
+        if (this.xp < this.bonusCosts.explosion) {
+            this.showLoveMessage("Недостатньо очків для бонусу! ❤️‍🔥");
+            this.activeBonus = null;
+            this.updateBonusButtons();
+            return;
+        }
+        
+        let affectedCells = 0;
+        for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+                const nx = x + dx;
+                const ny = y + dy;
+                
+                if (nx >= 0 && nx < this.GRID_W && ny >= 0 && ny < this.GRID_H) {
+                    this.grid[nx][ny].number = this.getRandomInitialNumber();
+                    affectedCells++;
                 }
             }
-            
-            this.xp -= this.bonusCosts.explosion;
-            this.activeBonus = null;
-            this.updateBonusButtons();
-            this.render();
-            this.updateInfo();
-            this.showLoveMessage("Вибух кохання! 💥❤️");
-            
-            // СОХРАНЕНИЕ ПОСЛЕ ИСПОЛЬЗОВАНИЯ БОНУСА
-            this.saveGameProgress();
-        } catch (error) {
-            console.error("Ошибка использования бонуса взрыва:", error);
         }
+        
+        this.xp -= this.bonusCosts.explosion;
+        this.activeBonus = null;
+        this.updateBonusButtons();
+        this.render();
+        this.updateInfo();
+        this.showLoveMessage(`Вибух кохання! Пошкоджено ${affectedCells} клітинок! 💥❤️`);
+        
+        this.saveGameProgress();
+        
+    } catch (error) {
+        console.error("Помилка використання бонусу вибуху:", error);
     }
+}
     
     updateBonusButtons() {
         try {
