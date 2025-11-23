@@ -1071,6 +1071,10 @@ class LoveNumberPuzzle {
                 this.maxNumber = newValue;
             }
             
+            // ОБНОВЛЯЕМ ИНФОРМАЦИЮ СРАЗУ ПОСЛЕ ДОБАВЛЕНИЯ XP
+            this.updateInfo();
+            this.updateBonusButtons();
+
             setTimeout(() => {
                 for (let x = 0; x < this.GRID_W; x++) {
                     for (let y = 0; y < this.GRID_H; y++) {
@@ -1080,13 +1084,15 @@ class LoveNumberPuzzle {
                 
                 this.render();
                 this.checkWin();
+
+                // 🔄 СОХРАНЕНИЕ ТЕПЕРЬ ЗДЕСЬ - ПОСЛЕ ВСЕХ ИЗМЕНЕНИЙ!
+                this.saveGameProgress();
+
             }, 350);
             
             this.selected = [];
             this.chainNumbers = [];
             this.render();
-            this.updateInfo();
-            this.updateBonusButtons();
             
             // СОХРАНЕНИЕ ПОСЛЕ КАЖДОГО ХОДА
             this.saveGameProgress();
@@ -1324,7 +1330,9 @@ getBonusName(bonusType) {
         if (this.xp < this.bonusCosts.destroy) {
             this.showLoveMessage("Недостатньо очків для бонусу! ❤️‍🔥");
             this.activeBonus = null;
+            this.updateInfo();
             this.updateBonusButtons();
+            this.saveGameProgress();
             return;
         }
         
@@ -1351,7 +1359,9 @@ useExplosionBonus(x, y) {
         if (this.xp < this.bonusCosts.explosion) {
             this.showLoveMessage("Недостатньо очків для бонусу! ❤️‍🔥");
             this.activeBonus = null;
+            this.updateInfo();
             this.updateBonusButtons();
+            this.saveGameProgress();
             return;
         }
         
