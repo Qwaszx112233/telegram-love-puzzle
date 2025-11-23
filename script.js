@@ -915,10 +915,13 @@ class LoveNumberPuzzle {
     
     activateBonus(bonusType) {
     try {
-        console.log(`Активируем бонус: ${bonusType}`); // ДЛЯ ДЕБАГА
+        console.log(`Активируем бонус: ${bonusType}`);
+        console.log(`Текущий activeBonus: ${this.activeBonus}`);
+        console.log(`XP: ${this.xp}, Нужно: ${this.bonusCosts[bonusType]}`);
         
         // Если бонус уже активен - деактивируем
         if (this.activeBonus === bonusType) {
+            console.log("Деактивируем бонус");
             this.activeBonus = null;
             this.updateBonusButtons();
             this.render();
@@ -928,12 +931,14 @@ class LoveNumberPuzzle {
         
         // Проверяем достаточно ли XP
         if (this.xp < this.bonusCosts[bonusType]) {
+            console.log("Недостаточно XP");
             this.showLoveMessage(`Потрібно ${this.bonusCosts[bonusType]} очків кохання! ❤️‍🔥`);
             return;
         }
         
         // Если бонус "shuffle" - сразу используем
         if (bonusType === 'shuffle') {
+            console.log("Используем shuffle сразу");
             this.xp -= this.bonusCosts.shuffle;
             this.shuffleGrid();
             this.showLoveMessage("Поле перемішано з любов'ю! 💫");
@@ -943,21 +948,23 @@ class LoveNumberPuzzle {
         }
         
         // Для других бонусов - активируем режим
+        console.log(`Активируем режим бонуса: ${bonusType}`);
         this.activeBonus = bonusType;
         this.updateBonusButtons();
         this.render();
-        this.showLoveMessage(`Бонус "${this.getBonusName(bonusType)}" активовано! 💫`);
+        this.showLoveMessage(`Бонус "${this.getBonusName(bonusType)}" активовано! Клацни на клітинку 💫`);
+        
+        console.log(`activeBonus после активации: ${this.activeBonus}`);
         
     } catch (error) {
         console.error("Помилка активації бонуса:", error);
     }
 }
 
-// Добавьте эту вспомогательную функцию
 getBonusName(bonusType) {
     const names = {
         'destroy': 'Розбити',
-        'explosion': 'Вибух кохання', 
+        'explosion': 'Вибух кохання',
         'shuffle': 'Перемішати'
     };
     return names[bonusType] || bonusType;
