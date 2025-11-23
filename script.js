@@ -887,22 +887,28 @@ class LoveNumberPuzzle {
             this.currentLevel = levelNum;
             const level = this.levels[this.currentLevel];
 
-            this.xpToNext = level.xpToNext;
+            this.xpToNext = level.xpToNext;  // тільки скільки треба до наступного рівня
             this.maxNumber = level.max;
             this.selected = [];
             this.isDragging = false;
             this.chainNumbers = [];
             this.activeBonus = null;
             this.gameState = 'playing';
-            this.messageCount = 0;
 
-            // Создаем новую сетку только если нет сохраненной
+            // Створюємо нову сітку ТІЛЬКИ якщо її немає або вона порожня
             if (!this.grid || this.grid.length === 0 || this.grid[0].length === 0) {
-                // генеруємо нову сітку
-            } else {
-                // сітка вже є — нічого не робимо, просто оновлюємо рівень
-                console.log("Використовуємо збережену сітку");
+                this.grid = [];
+                for (let x = 0; x < this.GRID_W; x++) {
+                    this.grid[x] = [];
+                    for (let y = 0; y < this.GRID_H; y++) {
+                        this.grid[x][y] = {
+                            number: level.numbers[Math.floor(Math.random() * level.numbers.length)],
+                            merged: false
+                        };
+                    }
+                }
             }
+            // Якщо сітка вже є (збереження) — залишаємо її як є
 
             document.getElementById('messageCount').textContent = this.messageCount;
 
