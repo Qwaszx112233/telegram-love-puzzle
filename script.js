@@ -112,17 +112,6 @@ class LoveNumberPuzzle {
         
         container.innerHTML = "";
         
-        // Добавляем заголовок
-        const header = document.createElement('div');
-        header.className = "level-select-header";
-        header.textContent = "Обери рівень кохання 💖";
-        header.style.gridColumn = "1 / -1";
-        header.style.textAlign = "center";
-        header.style.marginBottom = "10px";
-        header.style.fontWeight = "bold";
-        header.style.color = "var(--primary-color)";
-        container.appendChild(header);
-
         for (let i = 0; i < this.levels.length; i++) {
             const btn = document.createElement('button');
             btn.className = "level-btn-large";
