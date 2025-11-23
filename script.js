@@ -1407,7 +1407,7 @@ getBonusEmoji(bonusType) {
         try {
             if (this.currentLevel < this.MAX_LEVEL - 1) {
                 setTimeout(() => {
-                    this.showLoveMessage(`Автоматичний перехід на рівень ${this.currentLevel + 2} через 3 секунди... ⏱️`);
+                    this.showLoveMessage(`Автоматичний перехід на рівень ${this.currentLevel + 2} через 3,2,1 секунду... ⏱️`);
                     setTimeout(() => {
                         this.initGame(this.currentLevel + 1);
                         this.showLoveMessage(`Рівень ${this.currentLevel + 1}! Нові можливості! 🚀`);
@@ -1551,5 +1551,6 @@ function initializeGame() {
         });
     }
 }
+
 
 initializeGame();
